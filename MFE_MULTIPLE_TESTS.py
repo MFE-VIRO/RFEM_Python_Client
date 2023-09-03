@@ -25,17 +25,36 @@ from RFEM.Tools.GetObjectNumbersByType import GetObjectNumbersByType
 if __name__ == '__main__':
     Model(True, "MultipleTests_MFE") # Create new model called MultipleTests_MFE
     Model.clientModel.service.begin_modification()
+    
+    Material(1, 'S235')
+    Material(2, 'S275')
+    Material(3, 'S355')
+
+    Section(1,'IPE 200',3) # Profiel uitvoeren in S355
+    Section(2,'IPE 300',1) # Profiel uitvoeren in S235
+
     aantal = 10 # The amount of elements to be created
-# Nodes maken    
+    
+    # 10 Elementen maken:    
     for i in range(1,aantal+1):
+    
+        #Knoop aanmaken:
         Node(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_NODE),2*(i-1.0),0.0,0.0)
 
+        #Lijn aanmaken en hier een member van maken:
         Node(aantal+2*(i-1)+1,2*(i-1.0),1.0,0.0)
         Node(aantal+2*(i-1)+2,2*(i-1.0)+1,1.0,0.0)
-        Line(i,str(aantal+2*(i-1)+1)+" "+str(aantal+2*(i-1)+2))
         
-
-            
+        #Member.Beam(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),aantal+6*(i-1)+1,aantal+6*(i-1)+2,start_section_no=2,end_section_no=2)
+        
+        Node(aantal+6*(i-1)+3,2*(i-1.0),2.0,0.0)
+        Node(aantal+6*(i-1)+4,2*(i-1.0)+1.0,2.0,0.0)
+        Node(aantal+6*(i-1)+5,2*(i-1.0)+1.0,3.0,0.0)
+        Node(aantal+6*(i-1)+6,2*(i-1.0),3.0,0.0)
+        Line(i,str(aantal+2*(i-1)+3)+" "+str(aantal+2*(i-1)+4))
+        Line(i,str(aantal+2*(i-1)+4)+" "+str(aantal+2*(i-1)+5))
+        Line(i,str(aantal+2*(i-1)+5)+" "+str(aantal+2*(i-1)+6))
+        Line(i,str(aantal+2*(i-1)+6)+" "+str(aantal+2*(i-1)+7))    
     
     
 
