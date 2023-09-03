@@ -23,9 +23,9 @@ from RFEM.dataTypes import inf
 from RFEM.Tools.GetObjectNumbersByType import GetObjectNumbersByType
 
 if __name__ == '__main__':
-    Model(True, "MultipleTests_MFE") # crete new model called Ligger_op_twee_steunpunten
+    Model(True, "MultipleTests_MFE") # Create new model called MultipleTests_MFE
     Model.clientModel.service.begin_modification()
-    aantal = 10
+    aantal = 10 # The amount of elements to be created
 # Nodes maken    
     for i in range(1,aantal+1):
         Node(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_NODE),2*(i-1.0),0.0,0.0)
