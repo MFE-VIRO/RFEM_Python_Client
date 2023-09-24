@@ -15,6 +15,7 @@ from RFEM.BasicObjects.member import Member
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
 from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
 from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
+from RFEM.LoadCasesAndCombinations.loadCombination import LoadCombination
 from RFEM.Loads.memberLoad import MemberLoad
 from RFEM.Calculate.meshSettings import GetModelInfo
 from RFEM.ImportExport.exports import ExportDetailsOfDesignToCSV
@@ -74,6 +75,8 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(2, 'Variable',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_B_OFFICE_AREAS_QI_B)
 
     MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
+
+    LoadCombination(1)
 
     Model.clientModel.service.finish_modification()
 
