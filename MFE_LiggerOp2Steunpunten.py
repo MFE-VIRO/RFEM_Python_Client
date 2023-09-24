@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     Model.clientModel.service.finish_modification()
 
-    # Calculate_all()
+    Calculate_all()
     messages = CalculateSelectedCases([1])
     if len(messages) != 0:
         print("Calculation finished unsuccessfully")
