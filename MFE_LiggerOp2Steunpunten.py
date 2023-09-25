@@ -17,6 +17,8 @@ from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisS
 from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
 from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
 from RFEM.LoadCasesAndCombinations.loadCombination import LoadCombination
+from RFEM.LoadCasesAndCombinations.loadCasesAndCombinations import LoadCasesAndCombinations
+from RFEM.LoadCasesAndCombinations.combinationWizard import CombinationWizard
 from RFEM.Loads.memberLoad import MemberLoad
 from RFEM.Calculate.meshSettings import GetModelInfo
 from RFEM.ImportExport.exports import ExportDetailsOfDesignToCSV
@@ -73,16 +75,28 @@ if __name__ == '__main__':
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
     StaticAnalysisSettings.LargeDeformation(3, "LargeDeformation")
 
-    LoadCase.StaticAnalysis(1, 'Self-Weight',analysis_settings_no=1,self_weight=[True, 0.0, 0.0, 1.0])
+    LoadCase.StaticAnalysis(1, 'Self-Weight',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G,self_weight=[True, 0.0, 0.0, 1.0])
     LoadCase.StaticAnalysis(2, 'Variable',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_B_OFFICE_AREAS_QI_B)
 
     MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
 
+    LoadCasesAndCombinations({
+                    "current_standard_for_combination_wizard": 6047,
+                    "activate_combination_wizard_and_classification": True,
+                    "activate_combination_wizard": True,
+                    "result_combinations_active": True,
+                    "result_combinations_parentheses_active": True,
+                    "result_combinations_consider_sub_results": True,
+                    "combination_name_according_to_action_category": True
+                 },
+                 model= Model)
+
+    CombinationWizard(1, 'Wizard 1', 1, 1, False, False, 1, InitialStateDefintionType.DEFINITION_TYPE_FINAL_STATE, None, False, False, False, model = Model)
+
     DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B, True, 'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b')
     DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC)
-
-    LoadCombination(1)
-    LoadCombination(2,analysis_type=AnalysisType.ANALYSIS_TYPE_STATIC,design_situation=2)
+    # LoadCombination(1)
+    # LoadCombination(2,analysis_type=AnalysisType.ANALYSIS_TYPE_STATIC,design_situation=2)
 
     Model.clientModel.service.finish_modification()
 
