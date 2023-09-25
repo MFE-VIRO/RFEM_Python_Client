@@ -14,6 +14,7 @@ from RFEM.BasicObjects.node import Node
 from RFEM.BasicObjects.member import Member
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
 from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
+from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
 from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
 from RFEM.LoadCasesAndCombinations.loadCombination import LoadCombination
 from RFEM.Loads.memberLoad import MemberLoad
@@ -29,7 +30,8 @@ if __name__ == '__main__':
     l = float(input('Lengte van de ligger in m: '))
     q = float(input('Gelijkmatig verdeelde belasting in kN/m: '))
 
-    Model(True, "Ligger_op_twee_steunpunten") # crete new model called Ligger_op_twee_steunpunten
+    Model(True, "Ligger_op_twee_steunpunten") # create new model called Ligger_op_twee_steunpunten
+    Model.clientModel.service.delete_all()
     Model.clientModel.service.begin_modification()
 
     SetAddonStatus(Model.clientModel, AddOn.steel_design_active, True)
@@ -76,7 +78,11 @@ if __name__ == '__main__':
 
     MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
 
+    DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B, True, 'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b')
+    DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC)
+
     LoadCombination(1)
+    LoadCombination(2,analysis_type=AnalysisType.ANALYSIS_TYPE_STATIC,design_situation=2)
 
     Model.clientModel.service.finish_modification()
 
