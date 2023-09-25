@@ -7,7 +7,7 @@ class LineLoad():
                  no: int = 1,
                  load_case_no: int = 1,
                  lines_no: str = '1',
-                 load_direction = LoadDirectionType.LOAD_DIRECTION_LOCAL_Z,
+                 load_direction = NodalLoadDirection.LOAD_DIRECTION_LOCAL_Z,
                  magnitude: float = 0.0,
                  comment: str = '',
                  params: dict = None,
@@ -230,6 +230,7 @@ class LineLoad():
                 mlvlp = model.clientModel.factory.create('ns0:line_load_varying_load_parameters_row')
                 mlvlp.no = i+1
                 mlvlp.row = model.clientModel.factory.create('ns0:line_load_varying_load_parameters')
+                clearAttributes(mlvlp.row)
                 mlvlp.row.distance = load_parameter[i][0]
                 mlvlp.row.magnitude = load_parameter[i][1]
 
@@ -290,6 +291,7 @@ class LineLoad():
                 mlvlp = model.clientModel.factory.create('ns0:line_load_varying_load_parameters_row')
                 mlvlp.no = i+1
                 mlvlp.row = model.clientModel.factory.create('ns0:line_load_varying_load_parameters')
+                clearAttributes(mlvlp.row)
                 mlvlp.row.distance = load_parameter[i][0]
                 mlvlp.row.magnitude = load_parameter[i][1]
 
@@ -475,6 +477,7 @@ class LineLoad():
                 mlvlp = model.clientModel.factory.create('ns0:line_load_varying_load_parameters_row')
                 mlvlp.no = i+1
                 mlvlp.row = model.clientModel.factory.create('ns0:line_load_varying_load_parameters')
+                clearAttributes(mlvlp.row)
                 mlvlp.row.distance = load_parameter[i][0]
                 mlvlp.row.magnitude = load_parameter[i][1]
 
@@ -535,6 +538,7 @@ class LineLoad():
                 mlvlp = model.clientModel.factory.create('ns0:line_load_varying_load_parameters_row')
                 mlvlp.no = i+1
                 mlvlp.row = model.clientModel.factory.create('ns0:line_load_varying_load_parameters')
+                clearAttributes(mlvlp.row)
                 mlvlp.row.distance = load_parameter[i][0]
                 mlvlp.row.magnitude = load_parameter[i][1]
 

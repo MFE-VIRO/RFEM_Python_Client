@@ -20,6 +20,7 @@ from RFEM.BasicObjects.lineSet import LineSet
 from RFEM.BasicObjects.memberSet import MemberSet
 from RFEM.BasicObjects.solid import Solid
 from RFEM.BasicObjects.solidSet import SolidSet
+from RFEM.BasicObjects.coordinateSystem import CoordinateSystem
 
 if Model.clientModel is None:
     Model()
@@ -152,6 +153,28 @@ def test_line_elipticalArc():
 
     line = Model.clientModel.service.get_line(2)
     assert line.type == 'TYPE_ELLIPTICAL_ARC'
+
+def test_line_NURBS():
+
+    Model.clientModel.service.delete_all()
+    Model.clientModel.service.begin_modification()
+
+    Node(1,0,0,0)
+    Node(2,8,0,0)
+    Node(3,3,0,-4)
+    Node(4,5,0,4)
+
+    Line.NURBS(1, '1 2', [[0,0,0], [2,0,-2], [4,0,0], [6,0,2], [8,0,0]], [1, 1, 1, 1, 1], 4)
+    Line.NURBS(2, '1 3 4 2')
+
+    Model.clientModel.service.finish_modification()
+    line1 = Model.clientModel.service.get_line(1)
+    line2 = Model.clientModel.service.get_line(2)
+
+    assert line1.nurbs_order == 4
+    assert line1.definition_nodes == '1 2'
+    assert line2.type == "TYPE_NURBS"
+    assert line2.definition_nodes == '1 2'
 
 def test_lineSetInit():
 
@@ -345,7 +368,7 @@ def test_member_init():
      Member(1,  1, 2, 0, 1, 1)
 
      Model.clientModel.service.finish_modification()
-     
+
      member = Model.clientModel.service.get_member(1)
 
      assert member.analytical_length == 5
@@ -924,3 +947,24 @@ def test_get_thickness():
 
     assert thickness['type'] == "TYPE_UNIFORM"
     assert thickness['uniform_thickness'] == 0.02
+
+def test_coordinate_system():
+
+    Model.clientModel.service.delete_all()
+    Model.clientModel.service.begin_modification()
+
+    Material(1, 'S235')
+
+    Node(1, 0, 0, 0)
+
+    CoordinateSystem()
+    CoordinateSystem.OffsetXYZ(2)
+    CoordinateSystem.ThreePoints(3)
+    CoordinateSystem.TwoPointsAndAngle(4)
+    CoordinateSystem.PointAndThreeAngles(5)
+
+    Model.clientModel.service.finish_modification()
+
+    coord = Model.clientModel.service.get_coordinate_system(2)
+
+    assert coord.type == 'TYPE_OFFSET_XYZ'
