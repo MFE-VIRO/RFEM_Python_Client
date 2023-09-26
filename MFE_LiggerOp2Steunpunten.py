@@ -48,7 +48,8 @@ if __name__ == '__main__':
 
     Member(1, 1, 2, 0.0, 1, 1)
 
-    #Node.OnMember(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_NODE),1,NodeReferenceType = NodeReferenceType.REFERENCE_TYPE_L,)
+    for i in range(0,kipst):
+        Node.OnMember(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_NODE),1,NodeReferenceType.REFERENCE_TYPE_L, parameters = [True, (i+1)/(kipst+1)])
 
     NodalSupport(1, '1', [inf, inf, inf, inf, 0.0, 0.0])
     NodalSupport(2, '2', [0.0, inf, inf, inf, 0.0, 0.0])
@@ -56,6 +57,22 @@ if __name__ == '__main__':
     SteelEffectiveLengths(1, "1", "", True, True, True, True, True, True, 'SEL1',
         [
             [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, True, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
+
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
+
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
+
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
+
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
             0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
