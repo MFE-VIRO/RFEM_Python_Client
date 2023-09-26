@@ -7,7 +7,7 @@ print('dirname:     ', dirName)
 sys.path.append(dirName + r'/../..')
 
 from RFEM.enums import *
-from RFEM.initModel import Model, Calculate_all, CalculateSelectedCases, SetAddonStatus
+from RFEM.initModel import Model, Calculate_all, CalculateSelectedCases, SetAddonStatus, FirstFreeIdNumber
 from RFEM.BasicObjects.material import Material
 from RFEM.BasicObjects.section import Section
 from RFEM.BasicObjects.node import Node
@@ -31,6 +31,7 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 if __name__ == '__main__':
     l = float(input('Lengte van de ligger in m: '))
     q = float(input('Gelijkmatig verdeelde belasting in kN/m: '))
+    kipst = 3
 
     Model(True, "Ligger_op_twee_steunpunten") # create new model called Ligger_op_twee_steunpunten
     Model.clientModel.service.delete_all()
@@ -46,6 +47,8 @@ if __name__ == '__main__':
     Node(2, l, 0.0, 0.0)
 
     Member(1, 1, 2, 0.0, 1, 1)
+
+    #Node.OnMember(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_NODE),1,NodeReferenceType = NodeReferenceType.REFERENCE_TYPE_L,)
 
     NodalSupport(1, '1', [inf, inf, inf, inf, 0.0, 0.0])
     NodalSupport(2, '2', [0.0, inf, inf, inf, 0.0, 0.0])
@@ -69,16 +72,11 @@ if __name__ == '__main__':
 
     SteelDesignUltimateConfigurations(1, name="EC3 checks UGT")
     SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT","")
-
+    # Configuratie voor brandtoetsing toevoegen
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
     StaticAnalysisSettings.LargeDeformation(3, "LargeDeformation")
-
-    LoadCase.StaticAnalysis(1, 'Self-Weight',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G,self_weight=[True, 0.0, 0.0, 1.0])
-    LoadCase.StaticAnalysis(2, 'Variable',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_B_OFFICE_AREAS_QI_B)
-
-    MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
 
     LoadCasesAndCombinations({
                     "current_standard_for_combination_wizard": 6047,
@@ -91,12 +89,17 @@ if __name__ == '__main__':
                  },
                  model= Model)
 
+    LoadCase.StaticAnalysis(1, 'Self-Weight',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G,self_weight=[True, 0.0, 0.0, 1.0])
+    LoadCase.StaticAnalysis(2, 'Variable',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_B_OFFICE_AREAS_QI_B)
+
     CombinationWizard(1, 'Wizard 1', 1, 1, False, False, 1, InitialStateDefintionType.DEFINITION_TYPE_FINAL_STATE, None, False, False, False, model = Model)
 
-    DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B, True, 'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b')
-    DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC)
+    DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B, True, 'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b', params = {'combination_wizard': 1})
+    DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC, params = {'combination_wizard': 1})
     # LoadCombination(1)
     # LoadCombination(2,analysis_type=AnalysisType.ANALYSIS_TYPE_STATIC,design_situation=2)
+
+    MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
 
     Model.clientModel.service.finish_modification()
 
@@ -128,4 +131,7 @@ if __name__ == '__main__':
     print ("Model dimension z " + str(modelStatus.property_dimensions.z))
 
     node = Model.clientModel.service.get_node(1)
+    member = Model.clientModel.service.get_member(1)
+
     print ("Node x coordinate " + str(node.coordinate_1))
+    print(str(member.line))
