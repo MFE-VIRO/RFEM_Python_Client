@@ -31,7 +31,7 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 if __name__ == '__main__':
     l = float(input('Lengte van de ligger in m: '))
     q = float(input('Gelijkmatig verdeelde belasting in kN/m: '))
-    kipst = 3
+    kipst = 1
 
     Model(True, "Ligger_op_twee_steunpunten") # create new model called Ligger_op_twee_steunpunten
     Model.clientModel.service.delete_all()
@@ -60,24 +60,24 @@ if __name__ == '__main__':
             0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
-            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
-            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
-            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
-            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
-            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
-            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
-            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
-            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
-            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
-            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+            [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, False, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, \
+            0,0,0,0, SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
             SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, ""],
 
             [SteelEffectiveLengthsSupportType.SUPPORT_TYPE_INDIVIDUALLY, True, 0.0, SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, \
