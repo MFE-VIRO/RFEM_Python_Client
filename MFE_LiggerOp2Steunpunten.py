@@ -29,6 +29,13 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
+import xlwings as xw
+
+dirname = os.path.join(os.getcwd(), os.path.dirname(__file__))
+path = os.path.join(dirname,'MFE_TEST.xlsx')
+wb = xw.Book(path)
+
+Sheet = wb.sheets(1)
 
 if __name__ == '__main__':
     l = float(input('Lengte van de ligger in m: '))
@@ -179,14 +186,24 @@ if __name__ == '__main__':
     print("UCmax = " + str(UCmax))
     wait = input("Press Enter to continue.")
 
-    profielen = ["IPE 100", "IPE 120", "IPE 140"]
-    for profiel in profielen:
-        Model.clientModel.service.begin_modification()
-        Section(1, profiel)
-        Model.clientModel.service.finish_modification()
-        Calculate_all()
-        DO = GetDesignOverview()
-        UCmax = round(DO[0][0].row['design_ratio'],3)
-        print(profiel + ": UCmax = " + str(UCmax))
 
-    wait = input("Press Enter to continue.")
+
+
+    # profielen = ["IPE 100", "IPE 120", "IPE 140"]
+    # for profiel in profielen:
+    #     Model.clientModel.service.begin_modification()
+    #     Section(1, profiel)
+    #     Model.clientModel.service.finish_modification()
+    #     Calculate_all()
+    #     DO = GetDesignOverview()
+    #     UCmax = round(DO[0][0].row['design_ratio'],3)
+    #     print(profiel + ": UCmax = " + str(UCmax))
+
+    # wait = input("Press Enter to continue.")
+
+    for rij in range(1,10):
+        Sheet["B" + str(rij)].value = rij
+
+
+    wb.save(path)
+    wb.app.quit()
