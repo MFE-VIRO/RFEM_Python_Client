@@ -29,6 +29,14 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
+# import time as tm
+
+# t0=tm.time()
+
+# DeltaTime = tm.time()-t0
+# print(str(DeltaTime))
+# t0=tm.time()
+
 import xlwings as xw
 
 dirname = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -145,18 +153,19 @@ if __name__ == '__main__':
 
     Model.clientModel.service.finish_modification()
 
-    Calculate_all()
-    messages = CalculateSelectedCases([1])
-    if len(messages) != 0:
-        print("Calculation finished unsuccessfully")
-        print(messages)
-        # for message in messages:
-        #     print("{0}\t{1}: {2} - {3} {4} {5}".format("Yes" if message.result else "No", message.message_type.ToString(), message.message, message.@object, message.current_value, message.input_field))
-    else:
-        print("Calculation finished successfully")
+    # Calculate_all()
+    # messages = CalculateSelectedCases([1])
+    # if len(messages) != 0:
+    #     print("Calculation finished unsuccessfully")
+    #     print(messages)
+    #     # for message in messages:
+    #     #     print("{0}\t{1}: {2} - {3} {4} {5}".format("Yes" if message.result else "No", message.message_type.ToString(), message.message, message.@object, message.current_value, message.input_field))
+    # else:
+    #     print("Calculation finished successfully")
 
     # model status
-    modelStatus = GetModelInfo()
+
+    # modelStatus = GetModelInfo()
     # print("Model is calculated" if modelStatus.property_has_results else "Model is not calculated")
     # print("Model contains printout report" if modelStatus.property_has_printout_report else "Model has not printout report")
     # print ("Model contains " +  str(modelStatus.property_node_count) + " nodes")
@@ -177,31 +186,33 @@ if __name__ == '__main__':
     # print ("Node x coordinate " + str(node.coordinate_1))
     # print(str(member.line))
 
-    MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,1)
-    print("My,min = " +str(round(GetMinValue(MIF,'internal_force_my')/1000,4)) + "kNm")
-    print("My,max = " +str(round(GetMaxValue(MIF,'internal_force_my')/1000,4)) + "kNm")
-
-    DO = GetDesignOverview()
-    UCmax = round(DO[0][0].row['design_ratio'],3)
-    print("UCmax = " + str(UCmax))
-    wait = input("Press Enter to continue.")
-
-
     Sheet.clear_contents()
-    row = 1
-    profielen = ["IPE 80", "IPE 100", "IPE 120", "IPE 140", "IPE 160", "IPE 180", "IPE 200", "IPE 220", "IPE 240", "IPE 270", "IPE 300", "IPE 330", "IPE 360", "IPE 400", "IPE 450", "IPE 500", "IPE 550", "IPE 600"]
+    Sheet["A1"].value = "CrossSection"
+    Sheet["B1"].value = "Uz;max"
+    Sheet["B2"].value = "[mm]"
+    Sheet["C1"].value = "UCmax"
+    Sheet["C2"].value = "[-]"
+
+    row = 2
+    #profielen = ["IPE 80", "IPE 100", "IPE 120", "IPE 140", "IPE 160", "IPE 180", "IPE 200", "IPE 220", "IPE 240", "IPE 270", "IPE 300", "IPE 330", "IPE 360", "IPE 400", "IPE 450", "IPE 500", "IPE 550", "IPE 600"]
+    profielen = ["IPE 80"]
 
     for profiel in profielen:
         Model.clientModel.service.begin_modification()
         Section(1, profiel)
         Model.clientModel.service.finish_modification()
         Calculate_all()
+        MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,1)
+        My_max = GetMaxValue(MIF,'internal_force_my')/1000
+        GDeform = ResultTables.MembersGlobalDeformations(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,2,1)
+        Uz_max = GetMaxValue(GDeform,'displacement_z')*1000
         DO = GetDesignOverview()
         UCmax = round(DO[0][0].row['design_ratio'],3)
 
         row += 1
         Sheet["A" + str(row)].value = profiel
-        Sheet["B" + str(row)].value = UCmax
+        Sheet["B" + str(row)].value = Uz_max
+        Sheet["C" + str(row)].value = UCmax
 
         print(profiel + ": UCmax = " + str(UCmax))
 
