@@ -189,7 +189,8 @@ if __name__ == '__main__':
 
     Sheet.clear_contents()
     row = 1
-    profielen = ["IPE 100", "IPE 120", "IPE 140"]
+    profielen = ["IPE 80", "IPE 100", "IPE 120", "IPE 140", "IPE 160", "IPE 180", "IPE 200", "IPE 220", "IPE 240", "IPE 270", "IPE 300", "IPE 330", "IPE 360", "IPE 400", "IPE 450", "IPE 500", "IPE 550", "IPE 600"]
+
     for profiel in profielen:
         Model.clientModel.service.begin_modification()
         Section(1, profiel)
