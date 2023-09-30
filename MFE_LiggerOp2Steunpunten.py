@@ -178,3 +178,4 @@ if __name__ == '__main__':
     DO = GetDesignOverview()
     UCmax = round(DO[0][0].row['design_ratio'],3)
     print("UCmax = " + str(UCmax))
+    wait = input("Press Enter to continue.")
