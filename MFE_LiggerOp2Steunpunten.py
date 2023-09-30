@@ -218,11 +218,5 @@ if __name__ == '__main__':
 
     wait = input("Press Enter to continue.")
 
-
-    # for rij in range(1,10):
-    #     Sheet["B" + str(rij)].value = rij
-    #     Sheet.cells()
-
-
     wb.save(path)
     wb.app.quit()
