@@ -187,22 +187,29 @@ if __name__ == '__main__':
     wait = input("Press Enter to continue.")
 
 
+    Sheet.clear_contents()
+    row = 1
+    profielen = ["IPE 100", "IPE 120", "IPE 140"]
+    for profiel in profielen:
+        Model.clientModel.service.begin_modification()
+        Section(1, profiel)
+        Model.clientModel.service.finish_modification()
+        Calculate_all()
+        DO = GetDesignOverview()
+        UCmax = round(DO[0][0].row['design_ratio'],3)
+
+        row += 1
+        Sheet["A" + str(row)].value = profiel
+        Sheet["B" + str(row)].value = UCmax
+
+        print(profiel + ": UCmax = " + str(UCmax))
+
+    wait = input("Press Enter to continue.")
 
 
-    # profielen = ["IPE 100", "IPE 120", "IPE 140"]
-    # for profiel in profielen:
-    #     Model.clientModel.service.begin_modification()
-    #     Section(1, profiel)
-    #     Model.clientModel.service.finish_modification()
-    #     Calculate_all()
-    #     DO = GetDesignOverview()
-    #     UCmax = round(DO[0][0].row['design_ratio'],3)
-    #     print(profiel + ": UCmax = " + str(UCmax))
-
-    # wait = input("Press Enter to continue.")
-
-    for rij in range(1,10):
-        Sheet["B" + str(rij)].value = rij
+    # for rij in range(1,10):
+    #     Sheet["B" + str(rij)].value = rij
+    #     Sheet.cells()
 
 
     wb.save(path)
