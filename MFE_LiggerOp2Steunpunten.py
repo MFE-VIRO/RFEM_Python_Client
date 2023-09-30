@@ -26,6 +26,8 @@ from RFEM.dataTypes import inf
 from RFEM.SteelDesign.steelUltimateConfigurations import SteelDesignUltimateConfigurations
 from RFEM.SteelDesign.steelServiceabilityConfiguration import SteelDesignServiceabilityConfigurations
 from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
+from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
+from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
 
 if __name__ == '__main__':
@@ -168,3 +170,11 @@ if __name__ == '__main__':
     #eSELFD = Model.clientModel.service.getSteelEffectiveLengths(1)
     print ("Node x coordinate " + str(node.coordinate_1))
     print(str(member.line))
+
+    MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,1)
+    print("My,min = " +str(round(GetMinValue(MIF,'internal_force_my')/1000,4)) + "kNm")
+    print("My,max = " +str(round(GetMaxValue(MIF,'internal_force_my')/1000,4)) + "kNm")
+
+    DO = GetDesignOverview()
+    UCmax = round(DO[0][0].row['design_ratio'],3)
+    print("UCmax = " + str(UCmax))
