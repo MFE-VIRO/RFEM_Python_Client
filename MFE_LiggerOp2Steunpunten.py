@@ -29,14 +29,6 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
-# import time as tm
-
-# t0=tm.time()
-
-# DeltaTime = tm.time()-t0
-# print(str(DeltaTime))
-# t0=tm.time()
-
 import xlwings as xw
 
 dirname = os.path.join(os.getcwd(), os.path.dirname(__file__))
@@ -121,8 +113,7 @@ if __name__ == '__main__':
                         )
 
     SteelDesignUltimateConfigurations(1, name="EC3 checks UGT")
-    SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT","")
-    # Configuratie voor brandtoetsing toevoegen
+    SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT",)
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
@@ -146,45 +137,10 @@ if __name__ == '__main__':
 
     DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B, True, 'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b', params = {'combination_wizard': 1})
     DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC, params = {'combination_wizard': 1})
-    # LoadCombination(1)
-    # LoadCombination(2,analysis_type=AnalysisType.ANALYSIS_TYPE_STATIC,design_situation=2)
 
     MemberLoad.Force(1, 2, '1', MemberLoadDistribution.LOAD_DISTRIBUTION_UNIFORM, MemberLoadDirection.LOAD_DIRECTION_LOCAL_Z, load_parameter=[1000])
 
     Model.clientModel.service.finish_modification()
-
-    # Calculate_all()
-    # messages = CalculateSelectedCases([1])
-    # if len(messages) != 0:
-    #     print("Calculation finished unsuccessfully")
-    #     print(messages)
-    #     # for message in messages:
-    #     #     print("{0}\t{1}: {2} - {3} {4} {5}".format("Yes" if message.result else "No", message.message_type.ToString(), message.message, message.@object, message.current_value, message.input_field))
-    # else:
-    #     print("Calculation finished successfully")
-
-    # model status
-
-    # modelStatus = GetModelInfo()
-    # print("Model is calculated" if modelStatus.property_has_results else "Model is not calculated")
-    # print("Model contains printout report" if modelStatus.property_has_printout_report else "Model has not printout report")
-    # print ("Model contains " +  str(modelStatus.property_node_count) + " nodes")
-    # print ("Model contains " +  str(modelStatus.property_line_count) + " lines")
-    # print ("Model contains " +  str(modelStatus.property_member_count) + " members")
-    # print ("Model contains " +  str(modelStatus.property_surface_count) + " surfaces")
-    # print ("Model contains " +  str(modelStatus.property_solid_count) + " solids")
-    # print ("Model contains " +  str(modelStatus.property_lc_count) + " load cases")
-    # print ("Model contains " +  str(modelStatus.property_co_count) + " load combinations")
-    # print ("Model contains " +  str(modelStatus.property_rc_count) + " result classes")
-    # print ("Model weight " +   str(modelStatus.property_weight))
-    # print ("Model dimension x " + str(modelStatus.property_dimensions.x))
-    # print ("Model dimension y " + str(modelStatus.property_dimensions.y))
-    # print ("Model dimension z " + str(modelStatus.property_dimensions.z))
-
-    # node = Model.clientModel.service.get_node(1)
-    # member = Model.clientModel.service.get_member(1)
-    # print ("Node x coordinate " + str(node.coordinate_1))
-    # print(str(member.line))
 
     Sheet.clear_contents()
     Sheet["A1"].value = "CrossSection"
