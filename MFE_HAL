@@ -1,0 +1,77 @@
+import os
+import sys
+baseName = os.path.basename(__file__)
+dirName = os.path.dirname(__file__)
+print('basename:    ', baseName)
+print('dirname:     ', dirName)
+sys.path.append(dirName + r'/../..')
+
+from RFEM.enums import *
+from RFEM.initModel import Model, Calculate_all, CalculateSelectedCases, SetAddonStatus, FirstFreeIdNumber
+from RFEM.baseSettings import BaseSettings
+from RFEM.BasicObjects.material import Material
+from RFEM.BasicObjects.section import Section
+from RFEM.BasicObjects.node import Node
+from RFEM.BasicObjects.member import Member
+from RFEM.TypesForNodes.nodalSupport import NodalSupport
+from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
+from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
+from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
+from RFEM.LoadCasesAndCombinations.loadCombination import LoadCombination
+from RFEM.LoadCasesAndCombinations.loadCasesAndCombinations import LoadCasesAndCombinations
+from RFEM.LoadCasesAndCombinations.combinationWizard import CombinationWizard
+from RFEM.Loads.memberLoad import MemberLoad
+from RFEM.Calculate.meshSettings import GetModelInfo
+# from RFEM.ImportExport.exports import ExportDetailsOfDesignToCSV
+from RFEM.dataTypes import inf
+from RFEM.SteelDesign.steelUltimateConfigurations import SteelDesignUltimateConfigurations
+from RFEM.SteelDesign.steelServiceabilityConfiguration import SteelDesignServiceabilityConfigurations
+from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
+from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
+from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
+
+if __name__ == '__main__':
+    dy = float(input("H.o.h. afstand tussen assen // x-as [m]: "))
+    dx = float(input("H.o.h. afstand tussen assen // y-as [m]: "))
+    nx = int(input("Aantal assen in x-richting: "))
+    ny = int(input("Aantal assen in y-richting: "))
+    h = float(input("Hoogte hal incl. dakrand [m]: "))
+    h_dr = float(input("Hoogte dakrand [m]: "))
+    kst_kol = int(input("Aantal kniksteunen van de kolommen: "))
+    nodes_frame = 2*(3+kst_kol)+ny-2
+    members_frame = 2*(2+kst_kol)+ny-1
+    sup_nodes = []
+
+    Model(True, "MFE_HAL")
+    Model.clientModel.service.delete_all()
+    Model.clientModel.service.begin_modification()
+    BaseSettings(9.81, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN)
+
+    SetAddonStatus(Model.clientModel, AddOn.steel_design_active, True)
+
+    Material(1, 'S235')
+    Section(1, 'HEA 240', 1, "Profiel Kolommen 1")
+    Section(2, 'HEA 200', 1, "Profiel Kolommen 2")
+
+    for i in range(nx):
+        n = i*nodes_frame
+        m = i+members_frame
+
+        Node(n+1, i*dx, 0.0, 0.0)
+        sup_nodes.append(n+1)
+
+        if kst_kol >= 1:
+            for k in range(kst_kol):
+                Node(n+1+k+1, i*dx, 0.0, (k+1)*(h-h_dr)/(kst_kol+1))
+                Member(m+k+1,n+k+1,n+1+k+1,0.0,1,1)
+        Node(n+kst_kol+2, i*dx, 0.0, h-h_dr)
+        Member(m+kst_kol+1,n+kst_kol+1,n+kst_kol+2,0.0,1,1)
+        if kst_kol >= 1:
+            StaafStart = m+1
+            StaafEind = m+kst_kol+1
+
+
+
+
+
+    Model.clientModel.service.finish_modification()
