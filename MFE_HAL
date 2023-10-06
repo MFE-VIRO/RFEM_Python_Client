@@ -104,6 +104,10 @@ if __name__ == '__main__':
             StaafEind = m+members_frame-kst_kol
             MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS)
 
+        if ny >= 3:
+            for d in range(0,ny-2):
+                Node(n+kst_kol+d+3, i*dx, (d+1)*dy, h-h_dr)
+                Member(m+kst_kol+d+2,n+kst_kol+d+2,n+kst_kol+d+3, math.radians(0) ,1,1)
 
 
 
