@@ -108,6 +108,7 @@ if __name__ == '__main__':
             for d in range(0,ny-2):
                 Node(n+kst_kol+d+3, i*dx, (d+1)*dy, h-h_dr)
                 Member(m+kst_kol+d+2,n+kst_kol+d+2,n+kst_kol+d+3, math.radians(0) ,1,1)
+        Member(m+kst_kol+ny,n+kst_kol+ny,n+kst_kol+ny+1, math.radians(0) ,1,1)
 
 
 
