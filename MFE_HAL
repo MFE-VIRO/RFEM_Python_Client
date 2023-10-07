@@ -40,7 +40,7 @@ if __name__ == '__main__':
     ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
-    kst_kol = 1 #int(input("Aantal kniksteunen van de kolommen: "))
+    kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
     sup_nodes = []
@@ -72,6 +72,8 @@ if __name__ == '__main__':
     for i in range(nx):
         n = i*nodes_frame
         m = i*members_frame
+
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
     #Kolommen op x-as maken
 
@@ -142,9 +144,6 @@ if __name__ == '__main__':
                 Members_in_Set.append(m+kst_kol+d+3)
 
                 #Kipsteun maken
-
-                Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
-
                 if i>0:
                     Member(i+nx*members_frame+(d+1)*(nx-1),n+kst_kol-nodes_frame+d+4,n+kst_kol+d+4,math.radians(0),6,6)
 
@@ -173,6 +172,8 @@ if __name__ == '__main__':
 
     if ny >= 3:
         for d in range(ny-2):
+
+            #Kolommen as x=0 (kopse gevel)
             Members_in_Set = []
             Node(n+d*(kst_kol+2)+1, 0.0, (d+1)*dy, 0.0)
             if kst_kol >= 1:
@@ -182,9 +183,28 @@ if __name__ == '__main__':
                     Members_in_Set.append(m+d*(kst_kol+2)+k+1)
             Member(m+d*(kst_kol+2)+kst_kol+1,n+d*(kst_kol+2)+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2)
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
+            if kst_kol >= 1:
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2")
 
             #Verticaal profiel dakrand x=0
             Node(n+d*(kst_kol+2)+kst_kol+2, 0.0, (d+1)*dy, h)
             Member(m+d*(kst_kol+2)+kst_kol+2,0+kst_kol+d+4,n+d*(kst_kol+2)+kst_kol+2,math.radians(0),2,2)
+
+            #Kolommen as x=L (kopse gevel)
+            Members_in_Set = []
+            Node(n+(ny-2+d)*(kst_kol+2)+1, (nx-1)*dx, (d+1)*dy, 0.0)
+            if kst_kol >= 1:
+                for k in range(kst_kol):
+                    Node(n+(ny-2+d)*(kst_kol+2)+k+2, (nx-1)*dx, (d+1)*dy, (k+1)*(h-h_dr)/(kst_kol+1))
+                    Member(m+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+1,n+(ny-2+d)*(kst_kol+2)+k+2, math.radians(0) ,2,2)
+                    Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+k+1)
+            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+1,n+(ny-2+d)*(kst_kol+2)+kst_kol+1,(nx-1)*nodes_frame+kst_kol+d+4,math.radians(0),2,2)
+            Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
+            if kst_kol >= 1:
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2")
+
+            #Verticaal profiel dakrand x=L
+            Node(n+(ny-2+d)*(kst_kol+2)+kst_kol+2, (nx-1)*dx, (d+1)*dy, h)
+            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+2,(nx-1)*nodes_frame+kst_kol+d+4,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0),2,2)
 
     Model.clientModel.service.finish_modification()
