@@ -174,13 +174,13 @@ if __name__ == '__main__':
     if ny >= 3:
         for d in range(ny-2):
             Members_in_Set = []
-            Node(n+d*(kst_kol+1)+1, 0.0, (d+1)*dy, 0.0)
+            Node(n+d*(kst_kol+2)+1, 0.0, (d+1)*dy, 0.0)
             if kst_kol >= 1:
                 for k in range(kst_kol):
                     Node(n+d*(kst_kol+2)+k+2, 0.0, (d+1)*dy, (k+1)*(h-h_dr)/(kst_kol+1))
-                    Member(m+d*(kst_kol+2)+k+1,n+k+1,n+1+k+1, math.radians(0) ,2,2)
+                    Member(m+d*(kst_kol+2)+k+1,n+d*(kst_kol+2)+1,n+d*(kst_kol+2)+k+2, math.radians(0) ,2,2)
                     Members_in_Set.append(m+d*(kst_kol+2)+k+1)
-            Member(m+d*(kst_kol+2)+kst_kol+1,n+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2)
+            Member(m+d*(kst_kol+2)+kst_kol+1,n+d*(kst_kol+2)+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2)
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
 
             #Verticaal profiel dakrand x=0
