@@ -182,7 +182,7 @@ if __name__ == '__main__':
                     Member(m+d*(kst_kol+2)+k+1,n+d*(kst_kol+2)+1,n+d*(kst_kol+2)+k+2, math.radians(0) ,2,2)
                     Members_in_Set.append(m+d*(kst_kol+2)+k+1)
 
-                    #Horizontale gevelliggers:
+                    #Horizontale gevelliggers as x=0:
                     if d==0:
                         Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),0+1+k+1,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8)
                     else:
@@ -205,6 +205,13 @@ if __name__ == '__main__':
                     Node(n+(ny-2+d)*(kst_kol+2)+k+2, (nx-1)*dx, (d+1)*dy, (k+1)*(h-h_dr)/(kst_kol+1))
                     Member(m+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+1,n+(ny-2+d)*(kst_kol+2)+k+2, math.radians(0) ,2,2)
                     Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+k+1)
+
+                    #Horizontale gevelliggers as x=L:
+                    if d==0:
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),(nx-1)*nodes_frame+1+k+1,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8)
+                    else:
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+d-1)*(kst_kol+2)+k+2,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8)
+
             Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+1,n+(ny-2+d)*(kst_kol+2)+kst_kol+1,(nx-1)*nodes_frame+kst_kol+d+4,math.radians(0),2,2)
             Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
@@ -213,6 +220,11 @@ if __name__ == '__main__':
             #Verticaal profiel dakrand x=L
             Node(n+(ny-2+d)*(kst_kol+2)+kst_kol+2, (nx-1)*dx, (d+1)*dy, h)
             Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+2,(nx-1)*nodes_frame+kst_kol+d+4,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0),2,2)
+
+        #Horizontale gevelliggers in de kopgevels die aansluiten bij y = b:
+        for k in range(kst_kol):
+            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+((ny-2)-1)*(kst_kol+2)+k+2,nodes_frame-k-1,math.radians(0) ,8,8) #x=0
+            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+(ny-2)-1)*(kst_kol+2)+k+2,(nx-1)*nodes_frame+nodes_frame-k-1,math.radians(0) ,8,8) #x=L
 
     #TODO: Oelif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
 
