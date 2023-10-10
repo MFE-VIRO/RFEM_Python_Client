@@ -5,6 +5,11 @@ dirName = os.path.dirname(__file__)
 print('basename:    ', baseName)
 print('dirname:     ', dirName)
 sys.path.append(dirName + r'/../..')
+dict = {'A':'1','B':'2','C':'3','D':'4','E':'5','F':'6','G':'7','H':'8',\
+        'I':'9','J':'10','K':'11','L':'12','M':'13','N':'14','O':'15','P':'16',\
+        'Q':'17','R':'18','S':'19','T':'20','U':'21','V':'22','W':'23','X':'24',\
+        'Y':'25','Z':'26','AA':'27','AB':'28','AC':'29','AD':'30','AE':'31','AF':'32',\
+        'AG':'33','AH':'34','AI':'35','AJ':'36','AK':'37','AL':'38','AM':'39','AN':'40'}
 
 from RFEM.enums import *
 from RFEM.initModel import Model, Calculate_all, CalculateSelectedCases, ConvertToDlString, SetAddonStatus, FirstFreeIdNumber, insertSpaces
@@ -32,6 +37,18 @@ from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview\
 
 import math
+
+print(ord("a"))
+
+def BeamLimitCharacteristic(value: int = 100, sls_no = 1):
+
+    with open(dirName+r"./sls_char.js", "w") as std:
+
+        std.write("STEEL_DESIGN.steel_design_sls_configurations[{}].settings_ec3.property_sl_beam_limit_characteristic = {}".format(sls_no, value))
+
+    Model.clientModel.service.run_script(dirName+r"./sls_char.js")
+
+    os.remove(dirName+r"./sls_char.js")
 
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
@@ -87,6 +104,7 @@ if __name__ == '__main__':
                 Member(m+k+1,n+k+1,n+1+k+1, math.radians(90) ,1,1)
                 Members_in_Set.append(m+k+1)
 
+                #Gevelligers op x-as
                 if i>0:
                     Member(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1),n+1+k+1-nodes_frame,n+1+k+1,math.radians(0) ,8,8)
 
@@ -94,7 +112,7 @@ if __name__ == '__main__':
         Member(m+kst_kol+1,n+kst_kol+1,n+kst_kol+2,math.radians(90),1,1)
         Members_in_Set.append(m+kst_kol+1)
 
-        #Randbalk maken
+        #Randbalk x-as maken
         if i>0:
             Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5)
 
@@ -247,5 +265,6 @@ if __name__ == '__main__':
     NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
     #TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
-
+    SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT")
+    BeamLimitCharacteristic(134,1)
     Model.clientModel.service.finish_modification()
