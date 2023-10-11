@@ -39,6 +39,8 @@ from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverv
 import math
 
 print(ord("a"))
+EffLengthSets = [[]]
+
 
 def BeamLimitCharacteristic(value: int = 100, sls_no = 1):
 
@@ -117,7 +119,9 @@ if __name__ == '__main__':
             Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5)
 
         if kst_kol >= 1:
+            EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom")
+
 
     #Kolommen op y = b maken
 
@@ -265,6 +269,30 @@ if __name__ == '__main__':
     NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
     #TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
+
+    NodalSupportsList = []
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+    for i in range(5):
+        NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Y, False, 0.0, \
+                                    SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_AT_UPPER_FLANGE, 1,4,2,3, \
+                                    SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
+                                    SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                    ""],)
+
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+
+    SteelEffectiveLengths(1, "1", "2", False, False, False, True, True, False, 'SEL1', NodalSupportsList, intermediate_nodes=True,
+                          different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
+
+    SteelDesignUltimateConfigurations(1, name="EC3 checks UGT")
     SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT")
     BeamLimitCharacteristic(134,1)
     Model.clientModel.service.finish_modification()
