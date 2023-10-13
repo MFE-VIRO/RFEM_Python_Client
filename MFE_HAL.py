@@ -418,5 +418,34 @@ if __name__ == '__main__':
 
     SteelDesignUltimateConfigurations(1, name="EC3 checks UGT")
     SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT")
-    BeamLimitCharacteristic(134,1)
+    #BeamLimitCharacteristic(134,1)
+
+    StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
+    StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
+    StaticAnalysisSettings.LargeDeformation(3, "LargeDeformation")
+
+#BELASTINGEN
+
+    LoadCasesAndCombinations({
+                    "current_standard_for_combination_wizard": 6047,
+                    "activate_combination_wizard_and_classification": True,
+                    "activate_combination_wizard": True,
+                    "result_combinations_active": True,
+                    "result_combinations_parentheses_active": True,
+                    "result_combinations_consider_sub_results": True,
+                    "combination_name_according_to_action_category": True
+                 },
+                 model= Model)
+
     Model.clientModel.service.finish_modification()
+
+    LoadCase.StaticAnalysis(10, 'PB: Eigen Gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[True, 0.0, 0.0, -1.0])
+    LoadCase.StaticAnalysis(20, 'PB: Vloerafwerking en dakbedekking',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(30, 'PB: Gevelbekleding',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(40, 'PB: Trappen, leuningen en bordessen',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(50, 'PB: Klein installatie werk (gelijkmatig verdeeld)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
+    LoadCase.StaticAnalysis(60, 'PB: Grote leidingen en leidingsupports',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
+    LoadCase.StaticAnalysis(70, 'PB: Overige supports',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
+    LoadCase.StaticAnalysis(80, 'PB: Gronddrukken',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(90, 'PB: Reserve',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(100, 'VB: Opgelegde belasting op vloeren (momentaan)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_E_STORAGE_AREAS_QI_E, self_weight=[False])
