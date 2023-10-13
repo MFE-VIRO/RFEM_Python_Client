@@ -57,11 +57,11 @@ def BeamLimitCharacteristic(value: int = 100, sls_no = 1):
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 7 #int(input("Aantal assen in x-richting: "))
-    ny = 2 #int(input("Aantal assen in y-richting: "))
+    nx = 5 #int(input("Aantal assen in x-richting: "))
+    ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
-    kst_kol = 3 #int(input("Aantal kniksteunen van de kolommen: "))
+    kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
     sup_nodes = []
@@ -264,7 +264,7 @@ if __name__ == '__main__':
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
                 EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2")
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2",params={'design_properties_activated': True})
 
             #Verticaal profiel dakrand x=0
             Node(n+d*(kst_kol+2)+kst_kol+2, 0.0, (d+1)*dy, h)
@@ -282,41 +282,55 @@ if __name__ == '__main__':
             Members_in_Set = []
             Node(n+(ny-2+d)*(kst_kol+2)+1, (nx-1)*dx, (d+1)*dy, 0.0)
             sup_nodes.append(n+(ny-2+d)*(kst_kol+2)+1)
+
+            if kst_kol==0:
+                EffLengthMembers[1].append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
+                DesignPropsViaParentSet = False
+            else: DesignPropsViaParentSet = True
+
             if kst_kol >= 1:
                 for k in range(kst_kol):
                     Node(n+(ny-2+d)*(kst_kol+2)+k+2, (nx-1)*dx, (d+1)*dy, (k+1)*(h-h_dr)/(kst_kol+1))
-                    Member(m+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+k+2, math.radians(0) ,2,2)
+                    Member(m+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+k+1,n+(ny-2+d)*(kst_kol+2)+k+2, math.radians(0) ,2,2,params={'design_properties_via_member': False, 'design_properties_via_parent_member_set': True})
                     Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+k+1)
 
                     #Horizontale gevelliggers as x=L:
+                    EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1))
                     if d==0:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),(nx-1)*nodes_frame+1+k+1,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8)
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),(nx-1)*nodes_frame+1+k+1,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
                     else:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+d-1)*(kst_kol+2)+k+2,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8)
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+d-1)*(kst_kol+2)+k+2,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
-            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+1,n+(ny-2+d)*(kst_kol+2)+kst_kol+1,(nx-1)*nodes_frame+kst_kol+d+4,math.radians(0),2,2)
+            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+1,n+(ny-2+d)*(kst_kol+2)+kst_kol+1,(nx-1)*nodes_frame+kst_kol+d+4,math.radians(0),2,2,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
             Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2")
+                EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2",params={'design_properties_activated': True})
 
             #Verticaal profiel dakrand x=L
             Node(n+(ny-2+d)*(kst_kol+2)+kst_kol+2, (nx-1)*dx, (d+1)*dy, h)
-            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+2,(nx-1)*nodes_frame+kst_kol+d+4,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0),9,9)
+            EffLengthMembers[3].append(m+(ny-2+d)*(kst_kol+2)+kst_kol+2)
+            Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+2,(nx-1)*nodes_frame+kst_kol+d+4,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0),9,9,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
             #Horizontale profielen dakrand x=L
+            EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
             if d==0:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),(nx-1)*nodes_frame+1+kst_kol+2,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10)
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),(nx-1)*nodes_frame+1+kst_kol+2,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             else:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10)
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         #Horizontale gevelliggers in de kopgevels die aansluiten bij y = b:
         for k in range(kst_kol):
-            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+((ny-2)-1)*(kst_kol+2)+k+2,nodes_frame-k-1,math.radians(0) ,8,8) #x=0
-            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+(ny-2)-1)*(kst_kol+2)+k+2,(nx-1)*nodes_frame+nodes_frame-k-1,math.radians(0) ,8,8) #x=L
+            EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+k*(ny-1))
+            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+((ny-2)-1)*(kst_kol+2)+k+2,nodes_frame-k-1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
+            EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1))
+            Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+(ny-2)-1)*(kst_kol+2)+k+2,(nx-1)*nodes_frame+nodes_frame-k-1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
 
         #Horizontale profielen dakrand in de kopgevels die aansluiten bij y=b
-        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10) #x=0
-        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10) #x=L
+        EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
+        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
+        EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
+        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
 
     NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
