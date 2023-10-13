@@ -39,8 +39,8 @@ from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverv
 import math
 
 # print(ord("a"))
-EffLengthMembers = [[]]
-EffLengthSets = [[]]
+EffLengthMembers = [[],[],[],[]]
+EffLengthSets = [[],[],[],[]]
 DesignPropsViaParentSet = bool
 
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
     nx = 7 #int(input("Aantal assen in x-richting: "))
-    ny = 5 #int(input("Aantal assen in y-richting: "))
+    ny = 2 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
     kst_kol = 3 #int(input("Aantal kniksteunen van de kolommen: "))
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         Members_in_Set = []
 
         if kst_kol==0:
-            EffLengthMembers[0].append(m+kst_kol+1)
+            EffLengthMembers[1].append(m+kst_kol+1)
             DesignPropsViaParentSet = False
         else: DesignPropsViaParentSet = True
 
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
                 #Gevelligers op x-as
                 if i>0:
-                    EffLengthMembers[0].append(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1))
+                    EffLengthMembers[2].append(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1))
                     Member(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1),n+1+k+1-nodes_frame,n+1+k+1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         Node(n+kst_kol+2, i*dx, 0.0, h-h_dr)
@@ -124,11 +124,11 @@ if __name__ == '__main__':
 
         #Randbalk x-as maken
         if i>0:
-            EffLengthMembers[0].append(i+nx*members_frame)
+            EffLengthMembers[2].append(i+nx*members_frame)
             Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         if kst_kol >= 1:
-            EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
+            EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom",params={'design_properties_activated': True})
 
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         Members_in_Set = []
 
         if kst_kol==0:
-            EffLengthMembers[0].append(m+members_frame-kst_kol)
+            EffLengthMembers[1].append(m+members_frame-kst_kol)
             DesignPropsViaParentSet = False
         else: DesignPropsViaParentSet = True
 
@@ -150,7 +150,7 @@ if __name__ == '__main__':
                 Members_in_Set.append(m+members_frame-k)
 
                 if i>0:
-                    EffLengthMembers[0].append(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1))
+                    EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1))
                     Member(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1),n-k-1,n+nodes_frame-k-1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         Node(n+nodes_frame-kst_kol-1, i*dx, b, h-h_dr)
@@ -159,11 +159,11 @@ if __name__ == '__main__':
 
         #Randbalk maken
         if i>0:
-            EffLengthMembers[0].append(i+nx*members_frame+(ny-1)*(nx-1))
+            EffLengthMembers[2].append(i+nx*members_frame+(ny-1)*(nx-1))
             Member(i+nx*members_frame+(ny-1)*(nx-1),n-kst_kol-1,n+nodes_frame-kst_kol-1,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         if kst_kol >= 1:
-            EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
+            EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom",params={'design_properties_activated': True})
 
     #Hoofdliggers maken
@@ -181,18 +181,32 @@ if __name__ == '__main__':
 
             #Kipsteun maken
             if i>0:
+                EffLengthMembers[2].append(i+nx*members_frame+(0+1)*(nx-1))
                 Member(i+nx*members_frame+(0+1)*(nx-1),n+kst_kol-nodes_frame+4,n+kst_kol+4,math.radians(0),6,6)
 
             for d in range(1,ny-2):
                 Node(n+kst_kol+d+4, i*dx, (d+1)*dy, h-h_dr)
+                EffLengthMembers[2].append(m+kst_kol+d+3)
                 Member(m+kst_kol+d+3,n+kst_kol+d+3,n+kst_kol+d+4, math.radians(0) ,3,3)
                 Members_in_Set.append(m+kst_kol+d+3)
 
                 #Kipsteun maken
                 if i>0:
+                    EffLengthMembers[2].append(i+nx*members_frame+(d+1)*(nx-1))
                     Member(i+nx*members_frame+(d+1)*(nx-1),n+kst_kol-nodes_frame+d+4,n+kst_kol+d+4,math.radians(0),6,6)
 
-        Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+
+
+
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
+        if ny==2:
+            Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+        else:
+            Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
         Members_in_Set.append(m+kst_kol+ny+1)
         if ny >= 3:
             EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
@@ -200,13 +214,17 @@ if __name__ == '__main__':
 
     #Dakrand verticale en horizontale profielen maken
         Node(n+kst_kol+3, i*dx, 0, h)
+        EffLengthMembers[3].append(m+kst_kol+2)
         Member(m+kst_kol+2,n+kst_kol+2,n+kst_kol+3, math.radians(90) ,9,9)
         if i>0:
+            EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol)*(nx-1))
             Member(i+nx*members_frame+(ny+kst_kol)*(nx-1),n+kst_kol+3-nodes_frame,n+kst_kol+3,math.radians(0),10,10)
 
         Node(n+nodes_frame-kst_kol-2, i*dx, b, h)
+        EffLengthMembers[3].append(m+members_frame-kst_kol-1)
         Member(m+members_frame-kst_kol-1,n+nodes_frame-kst_kol-1,n+nodes_frame-kst_kol-2,math.radians(90),9,9)
         if i>0:
+            EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
             Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10)
 
     #Kopse gevels
@@ -294,6 +312,7 @@ if __name__ == '__main__':
 
     #TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
 
+    #Instellingen Steel Effective Lengths voor hoofdliggers maken:
     NodalSupportsList = []
     NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
                                 SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
@@ -314,6 +333,63 @@ if __name__ == '__main__':
                                 ""])
 
     SteelEffectiveLengths(1, insertSpaces(EffLengthMembers[0]), insertSpaces(EffLengthSets[0]), False, False, False, True, True, False, 'SEL1', NodalSupportsList, intermediate_nodes=True,
+                          different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
+
+    #Instellingen Steel Effective Lengths voor kolommen maken:
+    NodalSupportsList = []
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+    for i in range(5):
+        NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Y, False, 0.0, \
+                                    SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                    SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
+                                    SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                    ""],)
+
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+
+    SteelEffectiveLengths(2, insertSpaces(EffLengthMembers[1]), insertSpaces(EffLengthSets[1]), False, False, False, True, True, False, 'SEL2', NodalSupportsList, intermediate_nodes=True,
+                          different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
+
+    #Instellingen Steel Effective Lengths voor andere liggers maken:
+    NodalSupportsList = []
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+
+    SteelEffectiveLengths(3, insertSpaces(EffLengthMembers[2]), insertSpaces(EffLengthSets[2]), False, False, False, True, True, False, 'SEL3', NodalSupportsList, intermediate_nodes=False,
+                          different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
+
+    #Instellingen Steel Effective Lengths voor verticale dakrandprofielen maken:
+    NodalSupportsList = []
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_YES, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_YES, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_YES, \
+                                ""])
+
+    NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_NONE, True, 0.0, \
+                                SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
+                                SteelEffectiveLengthsSupportTypeInY.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeAboutX.SUPPORT_STATUS_NO, \
+                                SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
+                                ""])
+
+    SteelEffectiveLengths(4, insertSpaces(EffLengthMembers[3]), insertSpaces(EffLengthSets[3]), False, False, False, True, True, False, 'SEL4', NodalSupportsList, intermediate_nodes=False,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
     SteelDesignUltimateConfigurations(1, name="EC3 checks UGT")
