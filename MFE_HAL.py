@@ -54,6 +54,17 @@ def BeamLimitCharacteristic(value: int = 100, sls_no = 1):
 
     os.remove(dirName+r"./sls_char.js")
 
+def SnowWizardMonopitch(nodeList: [1,2,3,4]):
+
+    with open(dirName+r"./SnowWizard.js", "w") as snowwiz:
+
+        snowwiz.write("var snowLoadWizard = new SnowLoadWizard();\n")
+        snowwiz.write('snowLoadWizard.SetMonoPitchRoofType(undefined, [4, 9, 57, 52], load_cases[300])\n')
+
+    Model.clientModel.service.run_script(dirName+r"./SnowWizard.js")\
+
+    os.remove(dirName+r"./SnowWizard.js")
+
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
@@ -466,3 +477,4 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(910, 'PB: Equipement - operationele gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
 
+    SnowWizardMonopitch([4,9,57,52])
