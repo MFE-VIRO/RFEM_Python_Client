@@ -36,6 +36,8 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview\
 
+import MFE_ZoekNode
+
 import math
 
 # print(ord("a"))
@@ -478,3 +480,6 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
 
     SnowWizardMonopitch([4,9,57,52])
+
+    MFE_node = MFE_ZoekNode.ZoekNode(5,5,6)
+    print(MFE_node.no)
