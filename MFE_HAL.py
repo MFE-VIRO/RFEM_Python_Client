@@ -363,8 +363,8 @@ if __name__ == '__main__':
     nodes = MFE_getNodes.getNodes()             # met deze lijst kan je knopen opzoeken op basis van hun coördinaten
     members = MFE_getMembers.getMembers()       # met deze lijst kan je staven opzoeken op basis van hun begin- en eindknoop
 
-    Node1 = MFE_ZoekNode.ZoekNode2(5,5,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
-    Node2 = MFE_ZoekNode.ZoekNode2(5,10,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
+    Node1 = MFE_ZoekNode.ZoekNode(5,5,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
+    Node2 = MFE_ZoekNode.ZoekNode(5,10,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
 
     print(Node1["no"])
     print(Node2["no"])
