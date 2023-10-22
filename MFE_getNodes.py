@@ -9,5 +9,5 @@ def getNodes(model = Model):
     nodes = []
     for n in NodeNumbers:
         node = Node.GetNode(n,model)
-        nodes.append({"No":node.no,"X": node.coordinate_1, "Y": node.coordinate_2, "Z": node.coordinate_3})
+        nodes.append({"no":node.no,"X": node.coordinate_1, "Y": node.coordinate_2, "Z": node.coordinate_3})
     return nodes
