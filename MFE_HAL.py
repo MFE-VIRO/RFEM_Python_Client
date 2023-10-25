@@ -77,7 +77,7 @@ def SnowWizardMonopitch(nodeList: [1,2,3,4]):
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 5 #int(input("Aantal assen in x-richting: "))
+    nx = 10 #int(input("Aantal assen in x-richting: "))
     ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
@@ -96,8 +96,8 @@ if __name__ == '__main__':
 
     SetAddonStatus(Model.clientModel, AddOn.steel_design_active, True)
 
-    Model.clientModel.service.finish_modification()
-    Model.clientModel.service.begin_modification()
+    Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+    # Model.clientModel.service.begin_modification()
 
     Material(1, 'S235')
     Section(1, 'HEA 240', 1, "Profiel Kolommen 1")
@@ -248,6 +248,8 @@ if __name__ == '__main__':
             EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
             Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10)
 
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
     #Kopse gevels
     #Op x=0 goldt eerder n = 0 en m = 0
     #Op x=L goldt eerder n = (nx-1)*nodes_frame en m = (nx-1)*members_frame
@@ -355,27 +357,54 @@ if __name__ == '__main__':
 
     NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
+    Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
     #----------------------------------------------------------------------------
     #-                      WINDVERBANDEN TOEVOEGEN                             -
     #----------------------------------------------------------------------------
 
-
     nodes = MFE_getNodes.getNodes()             # met deze lijst kan je knopen opzoeken op basis van hun coördinaten
     members = MFE_getMembers.getMembers()       # met deze lijst kan je staven opzoeken op basis van hun begin- en eindknoop
 
+    print("T3 = " + str(time.time()-time1) + "s")
+    time1 = time.time()
+
+    #Schoren in langsgevels maken:
     xyzxyzList = []
 
-    if kst_kol == 0:
-        xyzxyzList.append([1*dx,0,0,2*dx,0,h-h_dr])
-        xyzxyzList.append([1*dx,0,0,2*dx,0,h-h_dr])
+    for k in range(kst_kol+1):
+        xyzxyzList.append([1*dx,0.0,k*(h-h_dr)/(kst_kol+1),2*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([2*dx,0.0,k*(h-h_dr)/(kst_kol+1),1*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([1*dx,b,k*(h-h_dr)/(kst_kol+1),2*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([2*dx,b,k*(h-h_dr)/(kst_kol+1),1*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+        if nx>=10:
+            xyzxyzList.append([(nx-2)*dx,0.0,k*(h-h_dr)/(kst_kol+1),(nx-3)*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-3)*dx,0.0,k*(h-h_dr)/(kst_kol+1),(nx-2)*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-2)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-3)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-3)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-2)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
 
+    for m in xyzxyzList:
+        Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
+        Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
 
-    Node1 = MFE_ZoekNode.ZoekNode(5,5,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
-    Node2 = MFE_ZoekNode.ZoekNode(5,10,6,Model,nodes) #VOORBEELD van het zoeken van een knoop
+    #Schoren in dakvlak maken:
 
-    print(Node1["no"])
-    print(Node2["no"])
+    if ny>2:
+        xyzxyzList = []
 
+        for d in range(ny-1):
+            xyzxyzList.append([1*dx,d*dy,(h-h_dr),2*dx,(d+1)*dy,(h-h_dr)])
+            xyzxyzList.append([2*dx,d*dy,(h-h_dr),1*dx,(d+1)*dy,(h-h_dr)])
+            if nx>=10:
+                xyzxyzList.append([(nx-2)*dx,d*dy,(h-h_dr),(nx-3)*dx,(d+1)*dy,(h-h_dr)])
+                xyzxyzList.append([(nx-3)*dx,d*dy,(h-h_dr),(nx-2)*dx,(d+1)*dy,(h-h_dr)])
+        for m in xyzxyzList:
+            Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
+            Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
 #TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
 
