@@ -406,6 +406,43 @@ if __name__ == '__main__':
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
+    #Schoren in kopse gevels maken:
+    xyzxyzList = []
+
+    for k in range(kst_kol+1):
+        xyzxyzList.append([1*dx,0.0,k*(h-h_dr)/(kst_kol+1),2*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([2*dx,0.0,k*(h-h_dr)/(kst_kol+1),1*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([1*dx,b,k*(h-h_dr)/(kst_kol+1),2*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+        xyzxyzList.append([2*dx,b,k*(h-h_dr)/(kst_kol+1),1*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+        if nx>=10:
+            xyzxyzList.append([(nx-2)*dx,0.0,k*(h-h_dr)/(kst_kol+1),(nx-3)*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-3)*dx,0.0,k*(h-h_dr)/(kst_kol+1),(nx-2)*dx,0.0,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-2)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-3)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+            xyzxyzList.append([(nx-3)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-2)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
+
+    for m in xyzxyzList:
+        Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
+        Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+
+    #Schoren in dakvlak maken:
+
+    if ny>2:
+        xyzxyzList = []
+
+        for d in range(ny-1):
+            xyzxyzList.append([1*dx,d*dy,(h-h_dr),2*dx,(d+1)*dy,(h-h_dr)])
+            xyzxyzList.append([2*dx,d*dy,(h-h_dr),1*dx,(d+1)*dy,(h-h_dr)])
+            if nx>=10:
+                xyzxyzList.append([(nx-2)*dx,d*dy,(h-h_dr),(nx-3)*dx,(d+1)*dy,(h-h_dr)])
+                xyzxyzList.append([(nx-3)*dx,d*dy,(h-h_dr),(nx-2)*dx,(d+1)*dy,(h-h_dr)])
+        for m in xyzxyzList:
+            Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
+            Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+
+        Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
 #TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
 
     #Instellingen Steel Effective Lengths voor hoofdliggers maken:
