@@ -9,5 +9,5 @@ def getMembers(model = Model):
     members = []
     for n in MemberNumbers:
         member = Member.GetMember(n,model)
-        members.append({"no":member.no,"startNode": member.node_start, "endNode":member.node_end})
+        members.append({"no":member.no,"startNode": member.node_start, "endNode":member.node_end, "line": member.line})
     return members

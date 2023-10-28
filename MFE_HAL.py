@@ -20,6 +20,7 @@ from RFEM.baseSettings import BaseSettings
 from RFEM.BasicObjects.material import Material
 from RFEM.BasicObjects.section import Section
 from RFEM.BasicObjects.node import Node
+from RFEM.BasicObjects.line import Line
 from RFEM.BasicObjects.member import Member
 from RFEM.BasicObjects.memberSet import MemberSet
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
@@ -77,7 +78,7 @@ def SnowWizardMonopitch(nodeList: [1,2,3,4]):
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 10 #int(input("Aantal assen in x-richting: "))
+    nx = 4 #int(input("Aantal assen in x-richting: "))
     ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
@@ -113,6 +114,38 @@ if __name__ == '__main__':
     Section(9, 'HEA 100', 1, "Profiel Dakrand Verticaal")
     Section(10, 'HEA 100', 1, "Profiel Dakrand Horizontaal")
 
+    # Lijsten aanmaken voor staven en lijnen waarmee uiteindelijk ook de Load Transfer 2D elementen worden gedefinieerd:
+    MemListRandLiggerX0 = []
+    MemListRandLiggerXL = []
+    MemListRandLiggerY0 = []
+    MemListRandLiggerYB = []
+    MemListKol00 = []
+    MemListKol0B = []
+    MemListKolL0 = []
+    MemListKolLB = []
+    MemListDak = []
+    MemListX0 = []
+    MemListXL = []
+    MemListY0 = []
+    MemListYB = []
+
+
+    LinListRandLiggerX0 = []
+    LinListRandLiggerXL = []
+    LinListRandLiggerY0 = []
+    LinListRandLiggerYB = []
+    LinListKol00 = []
+    LinListKol0B = []
+    LinListKolL0 = []
+    LinListKolLB = []
+
+    linesMV_Y0 = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op Y=0
+    linesMV_YB = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op Y=B
+    linesMV_X0 = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op X=0
+    linesMV_XL = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op X=L
+
+    #Beginnen met het invoeren van de geometrie
+
     for i in range(nx):
         n = i*nodes_frame
         m = i*members_frame
@@ -134,6 +167,8 @@ if __name__ == '__main__':
                 Node(n+1+k+1, i*dx, 0.0, (k+1)*(h-h_dr)/(kst_kol+1))
                 Member(m+k+1,n+k+1,n+1+k+1, math.radians(90) ,1,1,params={'design_properties_via_member': False, 'design_properties_via_parent_member_set': True})
                 Members_in_Set.append(m+k+1)
+                if i==0: MemListKol00.append(m+k+1)
+                if i==nx-1: MemListKolL0.append(m+k+1)
 
                 #Gevelligers op x-as
                 if i>0:
@@ -143,11 +178,14 @@ if __name__ == '__main__':
         Node(n+kst_kol+2, i*dx, 0.0, h-h_dr)
         Member(m+kst_kol+1,n+kst_kol+1,n+kst_kol+2,math.radians(90),1,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         Members_in_Set.append(m+kst_kol+1)
+        if i==0: MemListKol00.append(m+kst_kol+1)
+        if i==nx-1: MemListKolL0.append(m+kst_kol+1)
 
         #Randbalk x-as maken
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame)
             Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            MemListRandLiggerY0.append(i+nx*members_frame)
 
         if kst_kol >= 1:
             EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
@@ -170,6 +208,8 @@ if __name__ == '__main__':
                 Node(n+nodes_frame-k-1, i*dx, b, (k+1)*(h-h_dr)/(kst_kol+1))
                 Member(m+members_frame-k,n+nodes_frame-k,n+nodes_frame-k-1, math.radians(90) ,1,1,params={'design_properties_via_member': False, 'design_properties_via_parent_member_set': True})
                 Members_in_Set.append(m+members_frame-k)
+                if i==0: MemListKol0B.append(m+members_frame-k)
+                if i==nx-1: MemListKolLB.append(m+members_frame-k)
 
                 if i>0:
                     EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1))
@@ -178,11 +218,14 @@ if __name__ == '__main__':
         Node(n+nodes_frame-kst_kol-1, i*dx, b, h-h_dr)
         Member(m+members_frame-kst_kol,n+nodes_frame-kst_kol,n+nodes_frame-kst_kol-1,math.radians(90),1,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         Members_in_Set.append(m+members_frame-kst_kol)
+        if i==0: MemListKol0B.append(m+members_frame-kst_kol)
+        if i==nx-1: MemListKolLB.append(m+members_frame-kst_kol)
 
         #Randbalk maken
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny-1)*(nx-1))
             Member(i+nx*members_frame+(ny-1)*(nx-1),n-kst_kol-1,n+nodes_frame-kst_kol-1,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            MemListRandLiggerYB.append(i+nx*members_frame+(ny-1)*(nx-1))
 
         if kst_kol >= 1:
             EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
@@ -200,6 +243,8 @@ if __name__ == '__main__':
             Node(n+kst_kol+4, i*dx, dy, h-h_dr)
             Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,3,3,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             Members_in_Set.append(m+kst_kol+3)
+            if i==0: MemListRandLiggerX0.append(m+kst_kol+3)
+            if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+3)
 
             #Kipsteun maken
             if i>0:
@@ -211,6 +256,8 @@ if __name__ == '__main__':
                 EffLengthMembers[2].append(m+kst_kol+d+3)
                 Member(m+kst_kol+d+3,n+kst_kol+d+3,n+kst_kol+d+4, math.radians(0) ,3,3)
                 Members_in_Set.append(m+kst_kol+d+3)
+                if i==0: MemListRandLiggerX0.append(m+kst_kol+d+3)
+                if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+d+3)
 
                 #Kipsteun maken
                 if i>0:
@@ -226,6 +273,8 @@ if __name__ == '__main__':
             Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         else:
             Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+        if i==0: MemListRandLiggerX0.append(m+kst_kol+ny+1)
+        if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+ny+1)
 
         #Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -248,6 +297,15 @@ if __name__ == '__main__':
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
             Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10)
+
+        if i>0:
+            Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+            lineNodes = str(n+1-nodes_frame) + " " + str(n+1)
+            linesMV_Y0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+            Line(linesMV_Y0[i-1],lineNodes)
+            lineNodes = str(n) + " " + str(n+nodes_frame)
+            linesMV_YB.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+            Line(linesMV_YB[i-1],lineNodes)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -277,12 +335,14 @@ if __name__ == '__main__':
                     Member(m+d*(kst_kol+2)+k+1,n+d*(kst_kol+2)+k+1,n+d*(kst_kol+2)+k+2, math.radians(0) ,2,2,params={'design_properties_via_member': False, 'design_properties_via_parent_member_set': True})
                     Members_in_Set.append(m+d*(kst_kol+2)+k+1)
 
+
                     #Horizontale gevelliggers as x=0:
                     EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1))
                     if d==0:
                         Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),0+1+k+1,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
                     else:
                         Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+(d-1)*(kst_kol+2)+k+2,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
             Member(m+d*(kst_kol+2)+kst_kol+1,n+d*(kst_kol+2)+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
@@ -574,4 +634,32 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(910, 'PB: Equipement - operationele gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
 
-    SnowWizardMonopitch([4,9,57,52])
+    #SnowWizardMonopitch([4,9,57,52])
+
+    MemListKol0Br = MemListKol0B.copy(); MemListKol0Br.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
+    MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
+
+    MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
+    MemListX0 = MemListKol00 + MemListRandLiggerX0 + MemListKol0Br
+    MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
+    MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
+    MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
+
+
+    # Op het grondvlak lijnen aanbrengen tussen de kolomvoeten ten behoeven van load transfer surface elements:
+    #//X-as:
+
+    #//Y-as:
+    # for d in range(ny-1):
+
+
+    print(MemListDak)
+    print(MemListX0)
+    print(MemListXL)
+    print(MemListY0)
+    print(MemListYB)
+    print(MemListDak)
