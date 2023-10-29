@@ -87,8 +87,8 @@ def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 11 #int(input("Aantal assen in x-richting: "))
-    ny = 5 #int(input("Aantal assen in y-richting: "))
+    nx = 5 #int(input("Aantal assen in x-richting: "))
+    ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
     kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
@@ -484,7 +484,16 @@ if __name__ == '__main__':
             xyzxyzList.append([(nx-2)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-3)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
             xyzxyzList.append([(nx-3)*dx,b,k*(h-h_dr)/(kst_kol+1),(nx-2)*dx,b,(k+1)*(h-h_dr)/(kst_kol+1)])
 
+    t = 0 #teller om ervoor te zorgen dat er maar twee schoor staven worden gebruikt als excluded members in load transfer surfaces
+    exclParMembersY0.append(1+nx*members_frame)
+    exclParMembersYB.append(1+nx*members_frame+(ny-1)*(nx-1))
     for m in xyzxyzList:
+        if t<2:
+            exclParMembersY0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
+            t+=1
+        elif t<4:
+            exclParMembersYB.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
+            t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
         Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
@@ -500,6 +509,7 @@ if __name__ == '__main__':
             if nx>=10:
                 xyzxyzList.append([(nx-2)*dx,d*dy,(h-h_dr),(nx-3)*dx,(d+1)*dy,(h-h_dr)])
                 xyzxyzList.append([(nx-3)*dx,d*dy,(h-h_dr),(nx-2)*dx,(d+1)*dy,(h-h_dr)])
+
         for m in xyzxyzList:
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
@@ -516,7 +526,16 @@ if __name__ == '__main__':
         xyzxyzList.append([L,1*dy,k*(h-h_dr)/(kst_kol+1),L,2*dy,(k+1)*(h-h_dr)/(kst_kol+1)])
         xyzxyzList.append([L,2*dy,k*(h-h_dr)/(kst_kol+1),L,1*dy,(k+1)*(h-h_dr)/(kst_kol+1)])
 
+    t = 0 #teller om ervoor te zorgen dat er maar twee schoor staven worden gebruikt als excluded members in load transfer surfaces
+    exclParMembersX0.append(kst_kol+3)
+    exclParMembersXL.append((nx-1)*members_frame+kst_kol+3)
     for m in xyzxyzList:
+        if t<2:
+            exclParMembersX0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
+            t+=1
+        elif t<4:
+            exclParMembersXL.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
+            t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
         Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
@@ -659,7 +678,11 @@ if __name__ == '__main__':
     LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
     LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
 
-    Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':exclParMembersDak})
+    Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersDak)})
+    Surface(2,insertSpaces(LineListX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersX0)})
+    Surface(3,insertSpaces(LineListXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersXL)})
+    Surface(4,insertSpaces(LineListY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersY0)})
+    Surface(5,insertSpaces(LineListYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersYB)})
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
