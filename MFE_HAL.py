@@ -25,6 +25,7 @@ from RFEM.BasicObjects.member import Member
 from RFEM.BasicObjects.memberSet import MemberSet
 from RFEM.BasicObjects.surface import Surface
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
+from RFEM.TypesForMembers.memberHinge import MemberHinge
 from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
 from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
 from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
@@ -116,12 +117,19 @@ if __name__ == '__main__':
     Section(3, 'IPE 400', 1, "Profiel Hoofdliggers")
     Section(4, 'HEA 160', 1, "Profiel Dakliggers KOPSE GEVELS")
     Section(5, 'HEA 140', 1, "Profiel Dakliggers LANGSGEVELS")
-    Section(6, 'HEA 120', 1, "Profiel Kipsteunen dak")
-    Section(7, 'HEA 100', 1, "Profiel Horizontale gevelliggers KOPSE GEVELS")
+    Section(6, 'SHS 100x5 | EN 10210-2:2006-04', 1, "Profiel Kipsteunen dak")
+    Section(7, 'SHS 80x4 | EN 10210-2:2006-04', 1, "Profiel Horizontale gevelliggers KOPSE GEVELS")
     Section(8, 'HEA 100', 1, "Profiel Horizontale gevelliggers LANGSGEVELS")
 
     Section(9, 'HEA 100', 1, "Profiel Dakrand Verticaal")
     Section(10, 'HEA 100', 1, "Profiel Dakrand Horizontaal")
+    Section(11, 'L 90x90x9', 1, "Schoren Dak 1")
+    Section(12, 'L 90x90x9', 1, "Schoren Dak 2")
+    Section(13, 'FL 150x10', 1, "Schoren Gevel 1")
+    Section(14, 'FL 100x8', 1, "Schoren Gevel 2")
+
+    MemberHinge(1,"Local","",inf,inf,inf,inf,0,0)
+    MemberHinge(2,"Local","",inf,inf,inf,0,0,0)
 
     # Lijsten aanmaken voor staven en lijnen waarmee uiteindelijk ook de Load Transfer 2D elementen worden gedefinieerd:
     MemListRandLiggerX0 = []
@@ -187,7 +195,7 @@ if __name__ == '__main__':
                 #Gevelligers op x-as
                 if i>0:
                     EffLengthMembers[2].append(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1))
-                    Member(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1),n+1+k+1-nodes_frame,n+1+k+1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                    Member(i+nx*members_frame+(ny-2+2)*(nx-1)+k*(nx-1),n+1+k+1-nodes_frame,n+1+k+1,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         Node(n+kst_kol+2, i*dx, 0.0, h-h_dr)
         Member(m+kst_kol+1,n+kst_kol+1,n+kst_kol+2,math.radians(90),1,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
@@ -198,7 +206,7 @@ if __name__ == '__main__':
         #Randbalk x-as maken
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame)
-            Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            Member(i+nx*members_frame,n-nodes_frame+kst_kol+2,n+kst_kol+2,math.radians(0),5,5,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             MemListRandLiggerY0.append(i+nx*members_frame)
 
         if kst_kol >= 1:
@@ -227,7 +235,7 @@ if __name__ == '__main__':
 
                 if i>0:
                     EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1))
-                    Member(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1),n-k-1,n+nodes_frame-k-1,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                    Member(i+nx*members_frame+(ny+kst_kol+1)*(nx-1)+k*(nx-1),n-k-1,n+nodes_frame-k-1,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
         Node(n+nodes_frame-kst_kol-1, i*dx, b, h-h_dr)
         Member(m+members_frame-kst_kol,n+nodes_frame-kst_kol,n+nodes_frame-kst_kol-1,math.radians(90),1,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
@@ -238,7 +246,7 @@ if __name__ == '__main__':
         #Randbalk maken
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny-1)*(nx-1))
-            Member(i+nx*members_frame+(ny-1)*(nx-1),n-kst_kol-1,n+nodes_frame-kst_kol-1,math.radians(0),5,5,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            Member(i+nx*members_frame+(ny-1)*(nx-1),n-kst_kol-1,n+nodes_frame-kst_kol-1,math.radians(0),5,5,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             MemListRandLiggerYB.append(i+nx*members_frame+(ny-1)*(nx-1))
 
         if kst_kol >= 1:
@@ -255,7 +263,7 @@ if __name__ == '__main__':
 
         if ny >= 3:
             Node(n+kst_kol+4, i*dx, dy, h-h_dr)
-            Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,3,3,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,3,3,1,0,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             Members_in_Set.append(m+kst_kol+3)
             if i==0: MemListRandLiggerX0.append(m+kst_kol+3)
             if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+3)
@@ -263,7 +271,7 @@ if __name__ == '__main__':
             #Kipsteun maken
             if i>0:
                 EffLengthMembers[2].append(i+nx*members_frame+(0+1)*(nx-1))
-                Member(i+nx*members_frame+(0+1)*(nx-1),n+kst_kol-nodes_frame+4,n+kst_kol+4,math.radians(0),6,6)
+                Member(i+nx*members_frame+(0+1)*(nx-1),n+kst_kol-nodes_frame+4,n+kst_kol+4,math.radians(0),6,6,1,2)
 
             for d in range(1,ny-2):
                 Node(n+kst_kol+d+4, i*dx, (d+1)*dy, h-h_dr)
@@ -276,7 +284,7 @@ if __name__ == '__main__':
                 #Kipsteun maken
                 if i>0:
                     EffLengthMembers[2].append(i+nx*members_frame+(d+1)*(nx-1))
-                    Member(i+nx*members_frame+(d+1)*(nx-1),n+kst_kol-nodes_frame+d+4,n+kst_kol+d+4,math.radians(0),6,6)
+                    Member(i+nx*members_frame+(d+1)*(nx-1),n+kst_kol-nodes_frame+d+4,n+kst_kol+d+4,math.radians(0),6,6,1,2)
 
 
 
@@ -284,9 +292,9 @@ if __name__ == '__main__':
         #Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
         if ny==2:
-            Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+            Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         else:
-            Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+            Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         if i==0: MemListRandLiggerX0.append(m+kst_kol+ny+1)
         if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+ny+1)
 
@@ -303,14 +311,14 @@ if __name__ == '__main__':
         Member(m+kst_kol+2,n+kst_kol+2,n+kst_kol+3, math.radians(90) ,9,9)
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol)*(nx-1))
-            Member(i+nx*members_frame+(ny+kst_kol)*(nx-1),n+kst_kol+3-nodes_frame,n+kst_kol+3,math.radians(0),10,10)
+            Member(i+nx*members_frame+(ny+kst_kol)*(nx-1),n+kst_kol+3-nodes_frame,n+kst_kol+3,math.radians(0),10,10,1,1)
 
         Node(n+nodes_frame-kst_kol-2, i*dx, b, h)
         EffLengthMembers[3].append(m+members_frame-kst_kol-1)
         Member(m+members_frame-kst_kol-1,n+nodes_frame-kst_kol-1,n+nodes_frame-kst_kol-2,math.radians(90),9,9)
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
-            Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10)
+            Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10,1,1)
 
     # Lijnen op grondvlak langsgevels tbv load transfer 2D elements
         if i>0:
@@ -354,9 +362,9 @@ if __name__ == '__main__':
                     #Horizontale gevelliggers as x=0:
                     EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1))
                     if d==0:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),0+1+k+1,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),0+1+k+1,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
                     else:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+(d-1)*(kst_kol+2)+k+2,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+(d-1)*(kst_kol+2)+k+2,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
 
             Member(m+d*(kst_kol+2)+kst_kol+1,n+d*(kst_kol+2)+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
@@ -373,9 +381,9 @@ if __name__ == '__main__':
             #Horizontale profielen dakrand x=0
             EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
             if d==0:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),0+1+kst_kol+2,n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),0+1+kst_kol+2,n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             else:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+d*(kst_kol+2),n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+d*(kst_kol+2),n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
             #Kolommen as x=L (kopse gevel)
             Members_in_Set = []
@@ -396,9 +404,9 @@ if __name__ == '__main__':
                     #Horizontale gevelliggers as x=L:
                     EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1))
                     if d==0:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),(nx-1)*nodes_frame+1+k+1,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),(nx-1)*nodes_frame+1+k+1,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
                     else:
-                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+d-1)*(kst_kol+2)+k+2,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                        Member(m+d+1+2*(kst_kol+2)*(ny-2)+(kst_kol+k+1)*(ny-1),n+(ny-2+d-1)*(kst_kol+2)+k+2,n+(ny-2+d)*(kst_kol+2)+k+2,math.radians(0) ,8,8,1,2,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
             Member(m+(ny-2+d)*(kst_kol+2)+kst_kol+1,n+(ny-2+d)*(kst_kol+2)+kst_kol+1,(nx-1)*nodes_frame+kst_kol+d+4,math.radians(0),2,2,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
             Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
@@ -414,9 +422,9 @@ if __name__ == '__main__':
             #Horizontale profielen dakrand x=L
             EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
             if d==0:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),(nx-1)*nodes_frame+1+kst_kol+2,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),(nx-1)*nodes_frame+1+kst_kol+2,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
             else:
-                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
             Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -456,7 +464,7 @@ if __name__ == '__main__':
         linesMV_XL.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
         Line(linesMV_XL[d+1],lineNodes)
 
-    NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
+    NodalSupport(1,insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
     Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -496,7 +504,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(90), 14, 14)
 
     #Schoren in dakvlak maken:
 
@@ -513,7 +521,7 @@ if __name__ == '__main__':
         for m in xyzxyzList:
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 12, 12)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -538,7 +546,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(90), 13, 13)
 
     #Schoren in dakvlak (in y-richting) maken:
 
@@ -558,7 +566,7 @@ if __name__ == '__main__':
                 t+=1
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
+            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 11, 11)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
