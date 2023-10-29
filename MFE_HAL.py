@@ -23,6 +23,7 @@ from RFEM.BasicObjects.node import Node
 from RFEM.BasicObjects.line import Line
 from RFEM.BasicObjects.member import Member
 from RFEM.BasicObjects.memberSet import MemberSet
+from RFEM.BasicObjects.surface import Surface
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
 from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
 from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
@@ -86,8 +87,8 @@ def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 4 #int(input("Aantal assen in x-richting: "))
-    ny = 4 #int(input("Aantal assen in y-richting: "))
+    nx = 11 #int(input("Aantal assen in x-richting: "))
+    ny = 5 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
     kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
@@ -137,7 +138,6 @@ if __name__ == '__main__':
     MemListY0 = []
     MemListYB = []
 
-
     LinListRandLiggerX0 = []
     LinListRandLiggerXL = []
     LinListRandLiggerY0 = []
@@ -151,6 +151,12 @@ if __name__ == '__main__':
     linesMV_YB = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op Y=B
     linesMV_X0 = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op X=0
     linesMV_XL = [] #Lijst met lijnen grondvlak tbv loadtransfer surfactelement op X=L
+
+    exclParMembersDak = []
+    exclParMembersX0 = []
+    exclParMembersXL = []
+    exclParMembersY0 = []
+    exclParMembersYB = []
 
     #Beginnen met het invoeren van de geometrie
 
@@ -525,12 +531,18 @@ if __name__ == '__main__':
                 xyzxyzList.append([d*dx,1*dy,(h-h_dr),(d+1)*dx,2*dy,(h-h_dr)])
                 xyzxyzList.append([d*dx,2*dy,(h-h_dr),(d+1)*dx,1*dy,(h-h_dr)])
 
+        t = 0 #teller om ervoor te zorgen dat er maar twee schoor staven worden gebruikt als excluded members in load transfer surfaces
+        exclParMembersDak.append(1+nx*members_frame+(ny-1)*(nx-1))
         for m in xyzxyzList:
+            if t<2:
+                exclParMembersDak.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
+                t+=1
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
             Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 6, 6)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
 
 #TODO: staafeigenschappen van schoren aanpassen (profielen aanmaken, scharnieren toevoegen, tension only)
 
@@ -621,6 +633,34 @@ if __name__ == '__main__':
     SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT")
     #BeamLimitCharacteristic(134,1)
 
+    #Load transfer surfaces maken voor gevels en dak
+    MemListKol0Br = MemListKol0B.copy(); MemListKol0Br.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
+    MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
+
+    MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
+    MemListX0 = MemListKol00 + MemListRandLiggerX0 + MemListKol0Br
+    MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
+    MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
+    MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
+
+    LineListDak = MemberToLineList(MemListDak,members)
+
+    linesMV_X0r = linesMV_X0.copy(); linesMV_X0r.reverse()
+    linesMV_XLr = linesMV_XL.copy(); linesMV_XLr.reverse()
+    linesMV_Y0r = linesMV_Y0.copy(); linesMV_Y0r.reverse()
+    linesMV_YBr = linesMV_YB.copy(); linesMV_YBr.reverse()
+
+    LineListX0 = MemberToLineList(MemListX0,members) + linesMV_X0r
+    LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
+    LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
+    LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
+
+    Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':exclParMembersDak})
+
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
     StaticAnalysisSettings.LargeDeformation(3, "LargeDeformation")
@@ -670,35 +710,4 @@ if __name__ == '__main__':
 
     #SnowWizardMonopitch([4,9,57,52])
 
-    MemListKol0Br = MemListKol0B.copy(); MemListKol0Br.reverse()
-    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
-    MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
-    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
-    MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
-    MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
 
-    MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
-    MemListX0 = MemListKol00 + MemListRandLiggerX0 + MemListKol0Br
-    MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
-    MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
-    MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
-
-    LineListDak = MemberToLineList(MemListDak,members)
-
-    linesMV_X0r = linesMV_X0.copy(); linesMV_X0r.reverse()
-    linesMV_XLr = linesMV_XL.copy(); linesMV_XLr.reverse()
-    linesMV_Y0r = linesMV_Y0.copy(); linesMV_Y0r.reverse()
-    linesMV_YBr = linesMV_YB.copy(); linesMV_YBr.reverse()
-
-    LineListX0 = MemberToLineList(MemListX0,members) + linesMV_X0r
-    LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
-    LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
-    LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
-
-
-
-    print(LineListDak)
-    print(LineListX0)
-    print(LineListXL)
-    print(LineListY0)
-    print(LineListYB)
