@@ -298,6 +298,7 @@ if __name__ == '__main__':
             EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
             Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10)
 
+    # Lijnen op grondvlak langsgevels tbv load transfer 2D elements
         if i>0:
             Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
             lineNodes = str(n+1-nodes_frame) + " " + str(n+1)
@@ -342,7 +343,7 @@ if __name__ == '__main__':
                         Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),0+1+k+1,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
                     else:
                         Member(m+d+1+2*(kst_kol+2)*(ny-2)+k*(ny-1),n+(d-1)*(kst_kol+2)+k+2,n+d*(kst_kol+2)+k+2,math.radians(0) ,8,8,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
-                Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
 
             Member(m+d*(kst_kol+2)+kst_kol+1,n+d*(kst_kol+2)+kst_kol+1,0+kst_kol+d+4,math.radians(0),2,2,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
@@ -403,6 +404,24 @@ if __name__ == '__main__':
             else:
                 Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
 
+            Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
+
+            # Lijnen op grondvlak kopse gevels tbv load transfer 2D elements
+            if d==0:
+                lineNodes = "1" + " " + str(n+d*(kst_kol+2)+1)
+                linesMV_X0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+                Line(linesMV_X0[d],lineNodes)
+                lineNodes = str((nx-1)*nodes_frame+1) + " " + str(n+(ny-2+d)*(kst_kol+2)+1)
+                linesMV_XL.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+                Line(linesMV_XL[d],lineNodes)
+            else:
+                lineNodes = str(n+(d-1)*(kst_kol+2)+1) + " " + str(n+d*(kst_kol+2)+1)
+                linesMV_X0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+                Line(linesMV_X0[d],lineNodes)
+                lineNodes = str(n+(ny-2+d-1)*(kst_kol+2)+1) + " " + str(n+(ny-2+d)*(kst_kol+2)+1)
+                linesMV_XL.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+                Line(linesMV_XL[d],lineNodes)
+
         #Horizontale gevelliggers in de kopgevels die aansluiten bij y = b:
         for k in range(kst_kol):
             EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+k*(ny-1))
@@ -415,6 +434,13 @@ if __name__ == '__main__':
         Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
         EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
         Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
+
+        lineNodes = str(n+((ny-2)-1)*(kst_kol+2)+1) + " " + str(nodes_frame)
+        linesMV_X0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+        Line(linesMV_X0[d+1],lineNodes)
+        lineNodes = str(n+(ny-2+(ny-2)-1)*(kst_kol+2)+1) + " " + str((nx-1)*nodes_frame+nodes_frame)
+        linesMV_XL.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
+        Line(linesMV_XL[d+1],lineNodes)
 
     NodalSupport(1, insertSpaces(sup_nodes), [inf, inf, inf, 0.0, 0.0, inf])
 
