@@ -75,6 +75,14 @@ def SnowWizardMonopitch(nodeList: [1,2,3,4]):
 
     os.remove(dirName+r"./SnowWizard.js")
 
+def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
+    listOut = []
+    for m in ListIn:
+        member = next(item for item in members if item["no"] == int(m))
+        listOut.append(member["line"])
+    return listOut
+
+
 if __name__ == '__main__':
     dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
     dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
@@ -513,7 +521,7 @@ if __name__ == '__main__':
         xyzxyzList = []
 
         for d in range(nx-1):
-            if d !=1 and (nx >= 10 and d != nx-3):
+            if d !=1 and not(nx >= 10 and d == nx-3):
                 xyzxyzList.append([d*dx,1*dy,(h-h_dr),(d+1)*dx,2*dy,(h-h_dr)])
                 xyzxyzList.append([d*dx,2*dy,(h-h_dr),(d+1)*dx,1*dy,(h-h_dr)])
 
@@ -675,17 +683,22 @@ if __name__ == '__main__':
     MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
     MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
 
+    LineListDak = MemberToLineList(MemListDak,members)
 
-    # Op het grondvlak lijnen aanbrengen tussen de kolomvoeten ten behoeven van load transfer surface elements:
-    #//X-as:
+    linesMV_X0r = linesMV_X0.copy(); linesMV_X0r.reverse()
+    linesMV_XLr = linesMV_XL.copy(); linesMV_XLr.reverse()
+    linesMV_Y0r = linesMV_Y0.copy(); linesMV_Y0r.reverse()
+    linesMV_YBr = linesMV_YB.copy(); linesMV_YBr.reverse()
 
-    #//Y-as:
-    # for d in range(ny-1):
+    LineListX0 = MemberToLineList(MemListX0,members) + linesMV_X0r
+    LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
+    LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
+    LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
 
 
-    print(MemListDak)
-    print(MemListX0)
-    print(MemListXL)
-    print(MemListY0)
-    print(MemListYB)
-    print(MemListDak)
+
+    print(LineListDak)
+    print(LineListX0)
+    print(LineListXL)
+    print(LineListY0)
+    print(LineListYB)
