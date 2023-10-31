@@ -40,7 +40,7 @@ from RFEM.SteelDesign.steelUltimateConfigurations import SteelDesignUltimateConf
 from RFEM.SteelDesign.steelServiceabilityConfiguration import SteelDesignServiceabilityConfigurations
 from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
-from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview\
+from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
 import MFE_ZoekNode
 import MFE_getMembers
@@ -742,3 +742,13 @@ if __name__ == '__main__':
     #SnowWizardMonopitch([4,9,57,52])
 
 
+
+
+
+#----------------------------------------------------------------------------------------------
+#
+#                       WINDBELASTING
+#
+#----------------------------------------------------------------------------------------------
+
+WindParameters = [{},{}]
