@@ -739,6 +739,15 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(910, 'PB: Equipement - operationele gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
 
+
+
+
+
+
+    print("First = " + str(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,300)))
+
+
+
     #SnowWizardMonopitch([4,9,57,52])
 
 
