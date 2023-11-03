@@ -24,6 +24,11 @@ def Wind(
 
 
 #TIJDELIJKE INVOER VOOR TESTEN. DIT MOETEN UITEINDELIJK FORMULES WORDEN MET Cpe, Cpi en qpw.
+    W_A = [-2.0,-3.0]
+    W_B = [-1.5,-2.0]
+    W_C = [-1.0,-1.5]
+    W_D = [0.5,0.7]
+    W_E = [-0.5,-0.7]
     W_F = [-2.0,-3.0]
     W_G = [-1.5,-2.0]
     W_H = [-1.0,-1.5]
@@ -38,41 +43,86 @@ def Wind(
     yb = BaseNode.coordinate_2
     zb = BaseNode.coordinate_3
 
-    FreeLoad.PolygonLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,401),
-                         load_case_no=401,surfaces_no="1",
-                         load_projection=FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
-                         load_direction=FreePolygonLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
-                         load_location=[[xb,yb],[xb+e[0]/10,yb],[xb+e[0]/10,yb+e[0]/4],[xb,yb+e[0]/4]],
-                         params={'magnitude_uniform': W_F[0]*1000})
+#Wind +X OVERDRUK
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"4 5",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XZ_OR_UW,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_A[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb,yb,xb+e[0]/5,yb+h,0])
 
-    FreeLoad.PolygonLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,401),
-                         load_case_no=401,surfaces_no="1",
-                         load_projection=FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
-                         load_direction=FreePolygonLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
-                         load_location=[[xb,yb+b[0]],[xb+e[0]/10,yb+b[0]],[xb+e[0]/10,yb+b[0]-e[0]/4],[xb,yb+b[0]-e[0]/4]],
-                         params={'magnitude_uniform': W_F[0]*1000})
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"4 5",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XZ_OR_UW,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_B[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb+e[0]/5,yb,xb+e[0],yb+h,0])
 
-    FreeLoad.PolygonLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,401),
-                         load_case_no=401,surfaces_no="1",
-                         load_projection=FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
-                         load_direction=FreePolygonLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
-                         load_location=[[xb,yb+e[0]/4],[xb+e[0]/10,yb+e[0]/4],[xb+e[0]/10,yb+b[0]-e[0]/4],[xb,yb+b[0]-e[0]/4]],
-                         params={'magnitude_uniform': W_G[0]*1000})
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"4 5",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XZ_OR_UW,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_C[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb+e[0],zb,xb+d[0],zb+h,0])
 
-    FreeLoad.PolygonLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,401),
-                         load_case_no=401,surfaces_no="1",
-                         load_projection=FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
-                         load_direction=FreePolygonLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
-                         load_location=[[xb+e[0]/10,yb],[xb+e[0]/2,yb],[xb+e[0]/2,yb+b[0]],[xb+e[0]/10,yb+b[0]]],
-                         params={'magnitude_uniform': W_H[0]*1000})
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"2",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_YZ_OR_VW,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_D[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [yb,zb,yb+b[0],zb+h,0])
 
-    FreeLoad.PolygonLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,401),
-                         load_case_no=401,surfaces_no="1",
-                         load_projection=FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
-                         load_direction=FreePolygonLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
-                         load_location=[[xb+e[0]/2,yb],[xb+d[0],yb],[xb+d[0],yb+b[0]],[xb+e[0]/2,yb+b[0]]],
-                         params={'magnitude_uniform': W_Iz[0]*1000})
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"3",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_YZ_OR_VW,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_E[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [yb,zb,yb+b[0],zb+h,0])
 
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"1",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_F[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb,yb,xb+e[0]/10,yb+e[0]/4,0])
+
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"1",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_F[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb,yb+b[0],xb+e[0]/10,yb+b[0]-e[0]/4,0])
+
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"1",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_G[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb,yb+e[0]/4,xb+e[0]/10,yb+b[0]-e[0]/4,0])
+
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"1",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_H[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb+e[0]/10,yb,xb+e[0]/2,yb+b[0],0])
+
+    FreeLoad.RectangularLoad(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_RECTANGULAR_LOAD,401),
+                             401,"1",FreeRectangularLoadLoadDistribution.LOAD_DISTRIBUTION_UNIFORM,
+                             FreeLoadLoadProjection.LOAD_PROJECTION_XY_OR_UV,
+                             FreeRectangularLoadLoadDirection.LOAD_DIRECTION_LOCAL_Z,
+                             [W_Iz[0]*1000],
+                             FreeRectangularLoadLoadLocationRectangle.LOAD_LOCATION_RECTANGLE_CORNER_POINTS,
+                             [xb+e[0]/2,yb,xb+d[0],yb+b[0],0])
 
     Model.clientModel.service.finish_modification()
 

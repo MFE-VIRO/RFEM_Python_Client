@@ -45,6 +45,7 @@ from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverv
 import MFE_ZoekNode
 import MFE_getMembers
 import MFE_getNodes
+from MFE_Wind_Walls_and_Flat_Roof import Wind
 
 import math
 
@@ -685,6 +686,8 @@ if __name__ == '__main__':
     LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
     LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
     LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
+    LineListXL.reverse()
+    LineListY0.reverse()
 
     Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersDak)})
     Surface(2,insertSpaces(LineListX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersX0)})
@@ -741,8 +744,7 @@ if __name__ == '__main__':
 
 
 
-
-
+    Wind(L,b,h,h_dr,1)
 
     print("First = " + str(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,300)))
 
