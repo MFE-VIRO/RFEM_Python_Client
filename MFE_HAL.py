@@ -92,13 +92,15 @@ if __name__ == '__main__':
     nx = 5 #int(input("Aantal assen in x-richting: "))
     ny = 4 #int(input("Aantal assen in y-richting: "))
     h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
-    h_dr = 0.5 #float(input("Hoogte dakrand [m]: "))
+    h_dr = 0.5 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
+    dhr = 0.2 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
     kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
     sup_nodes = []
     b = (ny-1)*dy
     L = (nx-1)*dx
+    qpz = 1.11 # "Winddruk in kN/m2 : "
 
     nodes=[]
 
@@ -744,7 +746,7 @@ if __name__ == '__main__':
 
 
 
-    Wind(L,b,h,h_dr,1)
+    #Wind(qpz,L,b,h,h_dr,dhr,1)
 
     print("First = " + str(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,300)))
 
