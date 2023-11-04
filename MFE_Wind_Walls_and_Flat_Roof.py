@@ -114,8 +114,8 @@ def Wind(
     zb = BaseNode.coordinate_3
 
 #Wind +X OVERDRUK
-    WindFreeRecLoad(401,"4 5","XZ",W_A[0],[xb,yb,xb+e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[0] + ") = " + str(round(W_A[0],2)) + " kN/m²")
-    WindFreeRecLoad(401,"4 5","XZ",W_B[0],[xb+e[0]/5,yb,xb+e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[0] + ") = " + str(round(W_B[0],2)) + " kN/m²")
+    WindFreeRecLoad(401,"4 5","XZ",W_A[0],[xb,zb,xb+e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[0] + ") = " + str(round(W_A[0],2)) + " kN/m²")
+    WindFreeRecLoad(401,"4 5","XZ",W_B[0],[xb+e[0]/5,zb,xb+e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[0] + ") = " + str(round(W_B[0],2)) + " kN/m²")
     WindFreeRecLoad(401,"4 5","XZ",W_C[0],[xb+e[0],zb,xb+d[0],zb+h],str(qpz) + "·(" + cpe_str[2] + cpi_str_inv[0] + ") = " + str(round(W_C[0],2)) + " kN/m²")
     WindFreeRecLoad(401,"2","YZ",W_D[0],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[3] + cpi_str_inv[0] + ") = " + str(round(W_D[0],2)) + " kN/m²")
     WindFreeRecLoad(401,"3","YZ",W_Ex[0],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[4][0] + cpi_str_inv[0] + ") = " + str(round(W_Ex[0],2)) + " kN/m²")
@@ -126,8 +126,8 @@ def Wind(
     WindFreeRecLoad(401,"1","XY",W_Iz,[xb+e[0]/2,yb,xb+d[0],yb+b[0]],str(qpz) + "·(" + cpe_str[9] + cpi_str_inv[0] + ") = " + str(round(W_Iz,2)) + " kN/m²")
 
 #Wind -X OVERDRUK
-    WindFreeRecLoad(402,"4 5","XZ",W_A[0],[xb+d[0],yb,xb+d[0]-e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[0] + ") = " + str(round(W_A[0],2)) + " kN/m²")
-    WindFreeRecLoad(402,"4 5","XZ",W_B[0],[xb+d[0]-e[0]/5,yb,xb+d[0]-e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[0] + ") = " + str(round(W_B[0],2)) + " kN/m²")
+    WindFreeRecLoad(402,"4 5","XZ",W_A[0],[xb+d[0],zb,xb+d[0]-e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[0] + ") = " + str(round(W_A[0],2)) + " kN/m²")
+    WindFreeRecLoad(402,"4 5","XZ",W_B[0],[xb+d[0]-e[0]/5,zb,xb+d[0]-e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[0] + ") = " + str(round(W_B[0],2)) + " kN/m²")
     WindFreeRecLoad(402,"4 5","XZ",W_C[0],[xb+d[0]-e[0],zb,xb,zb+h],str(qpz) + "·(" + cpe_str[2] + cpi_str_inv[0] + ") = " + str(round(W_C[0],2)) + " kN/m²")
     WindFreeRecLoad(402,"3","YZ",W_D[0],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[3] + cpi_str_inv[0] + ") = " + str(round(W_D[0],2)) + " kN/m²")
     WindFreeRecLoad(402,"2","YZ",W_Ex[0],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[4][0] + cpi_str_inv[0] + ") = " + str(round(W_Ex[0],2)) + " kN/m²")
@@ -162,8 +162,8 @@ def Wind(
     WindFreeRecLoad(404,"1","XY",W_Iz,[xb,yb+d[1]-e[1]/2,xb+b[1],yb],str(qpz) + "·(" + cpe_str[9] + cpi_str_inv[0] + ") = " + str(round(W_Iz,2)) + " kN/m²")
 
 #Wind +X ONDERDRUK
-    WindFreeRecLoad(411,"4 5","XZ",W_A[1],[xb,yb,xb+e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[1] + ") = " + str(round(W_A[1],2)) + " kN/m²")
-    WindFreeRecLoad(411,"4 5","XZ",W_B[1],[xb+e[0]/5,yb,xb+e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[1] + ") = " + str(round(W_B[1],2)) + " kN/m²")
+    WindFreeRecLoad(411,"4 5","XZ",W_A[1],[xb,zb,xb+e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[1] + ") = " + str(round(W_A[1],2)) + " kN/m²")
+    WindFreeRecLoad(411,"4 5","XZ",W_B[1],[xb+e[0]/5,zb,xb+e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[1] + ") = " + str(round(W_B[1],2)) + " kN/m²")
     WindFreeRecLoad(411,"4 5","XZ",W_C[1],[xb+e[0],zb,xb+d[0],zb+h],str(qpz) + "·(" + cpe_str[2] + cpi_str_inv[1] + ") = " + str(round(W_C[1],2)) + " kN/m²")
     WindFreeRecLoad(411,"2","YZ",W_D[1],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[3] + cpi_str_inv[1] + ") = " + str(round(W_D[1],2)) + " kN/m²")
     WindFreeRecLoad(411,"3","YZ",W_Ex[1],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[4][0] + cpi_str_inv[1] + ") = " + str(round(W_Ex[1],2)) + " kN/m²")
@@ -174,8 +174,8 @@ def Wind(
     WindFreeRecLoad(411,"1","XY",W_Id,[xb+e[0]/2,yb,xb+d[0],yb+b[0]],str(qpz) + "·(" + cpe_str[9] + cpi_str_inv[1] + ") = " + str(round(W_Id,2)) + " kN/m²")
 
 #Wind -X ONDERDRUK
-    WindFreeRecLoad(412,"4 5","XZ",W_A[1],[xb+d[0],yb,xb+d[0]-e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[1] + ") = " + str(round(W_A[1],2)) + " kN/m²")
-    WindFreeRecLoad(412,"4 5","XZ",W_B[1],[xb+d[0]-e[0]/5,yb,xb+d[0]-e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[1] + ") = " + str(round(W_B[1],2)) + " kN/m²")
+    WindFreeRecLoad(412,"4 5","XZ",W_A[1],[xb+d[0],zb,xb+d[0]-e[0]/5,zb+h],str(qpz) + "·(" + cpe_str[0] + cpi_str_inv[1] + ") = " + str(round(W_A[1],2)) + " kN/m²")
+    WindFreeRecLoad(412,"4 5","XZ",W_B[1],[xb+d[0]-e[0]/5,zb,xb+d[0]-e[0],zb+h],str(qpz) + "·(" + cpe_str[1] + cpi_str_inv[1] + ") = " + str(round(W_B[1],2)) + " kN/m²")
     WindFreeRecLoad(412,"4 5","XZ",W_C[1],[xb+d[0]-e[0],zb,xb,zb+h],str(qpz) + "·(" + cpe_str[2] + cpi_str_inv[1] + ") = " + str(round(W_C[1],2)) + " kN/m²")
     WindFreeRecLoad(412,"3","YZ",W_D[1],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[3] + cpi_str_inv[1] + ") = " + str(round(W_D[1],2)) + " kN/m²")
     WindFreeRecLoad(412,"2","YZ",W_Ex[1],[yb,zb,yb+b[0],zb+h],str(qpz) + "·(" + cpe_str[4][0] + cpi_str_inv[1] + ") = " + str(round(W_Ex[1],2)) + " kN/m²")

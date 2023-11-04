@@ -46,6 +46,7 @@ import MFE_ZoekNode
 import MFE_getMembers
 import MFE_getNodes
 from MFE_Wind_Walls_and_Flat_Roof import Wind
+from MFE_Sneeuw import Sneeuw
 
 import math
 
@@ -750,10 +751,10 @@ if __name__ == '__main__':
 
 
 
+
+
+    Sneeuw(L,b,dhr,1)
     Wind(qpz,L,b,h,h_dr,dhr,1)
-
-    print("First = " + str(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,300)))
-
 
 
     #SnowWizardMonopitch([4,9,57,52])
