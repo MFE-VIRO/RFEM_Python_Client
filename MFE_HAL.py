@@ -487,10 +487,10 @@ if __name__ == '__main__':
 
         #Horizontale profielen dakrand in de kopgevels die aansluiten bij y=b
         EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
-        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
+        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
         MemListDakRandX0.insert(len(MemListDakRandX0)-1,m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
         EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
-        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
+        Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
         MemListDakRandXL.insert(len(MemListDakRandXL)-1,m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
 
         lineNodes = str(n+((ny-2)-1)*(kst_kol+2)+1) + " " + str(nodes_frame)
