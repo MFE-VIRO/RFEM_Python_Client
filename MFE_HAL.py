@@ -728,10 +728,14 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(90, 'PB: Reserve',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
     LoadCase.StaticAnalysis(100, 'VB: Opgelegde belasting op vloeren (momentaan)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_E_STORAGE_AREAS_QI_E, self_weight=[False])
     LoadCase.StaticAnalysis(300, 'VB: Sneeuw en/of aanvriezing',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_SNOW_ICE_LOADS_H_LESS_OR_EQUAL_TO_1000_M_QS, self_weight=[False])
-    LoadCase.StaticAnalysis(401, 'VB: Wind (+X richting)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
-    LoadCase.StaticAnalysis(402, 'VB: Wind (-X richting)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
-    LoadCase.StaticAnalysis(403, 'VB: Wind (+Y richting)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
-    LoadCase.StaticAnalysis(404, 'VB: Wind (-Y richting)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(401, 'VB: Wind (+X richting; overdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(402, 'VB: Wind (-X richting; overdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(403, 'VB: Wind (+Y richting; overdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(404, 'VB: Wind (-Y richting; overdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(411, 'VB: Wind (+X richting; onderdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(412, 'VB: Wind (-X richting; onderdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(413, 'VB: Wind (+Y richting; onderdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
+    LoadCase.StaticAnalysis(414, 'VB: Wind (-Y richting; onderdruk)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_WIND_QW, self_weight=[False])
     LoadCase.StaticAnalysis(510, 'VB: Thermische belasting (geval 1)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_TEMPERATURE_NON_FIRE_QT, self_weight=[False])
     LoadCase.StaticAnalysis(520, 'VB: Thermische belasting (geval 2)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_TEMPERATURE_NON_FIRE_QT, self_weight=[False])
     LoadCase.StaticAnalysis(611, 'Hijslasten (geval 1 met hor. kracht in +X richting)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_E_STORAGE_AREAS_QI_E, self_weight=[False])
@@ -746,7 +750,7 @@ if __name__ == '__main__':
 
 
 
-    #Wind(qpz,L,b,h,h_dr,dhr,1)
+    Wind(qpz,L,b,h,h_dr,dhr,1)
 
     print("First = " + str(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_FREE_POLYGON_LOAD,300)))
 
