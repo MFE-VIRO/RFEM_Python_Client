@@ -150,6 +150,11 @@ if __name__ == '__main__':
     MemListY0 = []
     MemListYB = []
 
+    MemListDakRandX0 = []
+    MemListDakRandXL = []
+    MemListDakRandY0 = []
+    MemListDakRandYB = []
+
     LinListRandLiggerX0 = []
     LinListRandLiggerXL = []
     LinListRandLiggerY0 = []
@@ -169,6 +174,10 @@ if __name__ == '__main__':
     exclParMembersXL = []
     exclParMembersY0 = []
     exclParMembersYB = []
+    exclParDakRandMembersX0 = []
+    exclParDakRandMembersXL = []
+    exclParDakRandMembersY0 = []
+    exclParDakRandMembersYB = []
 
     #Beginnen met het invoeren van de geometrie
 
@@ -313,16 +322,33 @@ if __name__ == '__main__':
         Node(n+kst_kol+3, i*dx, 0, h)
         EffLengthMembers[3].append(m+kst_kol+2)
         Member(m+kst_kol+2,n+kst_kol+2,n+kst_kol+3, math.radians(90) ,9,9)
+        if i==0:
+            MemListDakRandY0.append(m+kst_kol+2)
+            MemListDakRandX0.append(m+kst_kol+2)
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny+kst_kol)*(nx-1))
             Member(i+nx*members_frame+(ny+kst_kol)*(nx-1),n+kst_kol+3-nodes_frame,n+kst_kol+3,math.radians(0),10,10,1,1)
+            MemListDakRandY0.append(i+nx*members_frame+(ny+kst_kol)*(nx-1))
+            if i==1: exclParDakRandMembersY0.append(i+nx*members_frame+(ny+kst_kol)*(nx-1))
+        if i == nx-1:
+            MemListDakRandY0.append(m+kst_kol+2)
+            MemListDakRandXL.append(m+kst_kol+2)
 
         Node(n+nodes_frame-kst_kol-2, i*dx, b, h)
         EffLengthMembers[3].append(m+members_frame-kst_kol-1)
         Member(m+members_frame-kst_kol-1,n+nodes_frame-kst_kol-1,n+nodes_frame-kst_kol-2,math.radians(90),9,9)
+        if i==0:
+            MemListDakRandYB.append(m+members_frame-kst_kol-1)
+            MemListDakRandX0.append(m+members_frame-kst_kol-1)
         if i>0:
             EffLengthMembers[2].append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
             Member(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1),n-kst_kol-2,n+nodes_frame-kst_kol-2,math.radians(0),10,10,1,1)
+            MemListDakRandYB.append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
+            if i==1: exclParDakRandMembersYB.append(i+nx*members_frame+(ny+2*kst_kol+1)*(nx-1))
+        if i == nx-1:
+            MemListDakRandYB.append(m+members_frame-kst_kol-1)
+            MemListDakRandXL.append(m+members_frame-kst_kol-1)
+
 
     # Lijnen op grondvlak langsgevels tbv load transfer 2D elements
         if i>0:
@@ -386,8 +412,10 @@ if __name__ == '__main__':
             EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
             if d==0:
                 Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),0+1+kst_kol+2,n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                exclParDakRandMembersX0.append(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
             else:
                 Member(m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+d*(kst_kol+2),n+d*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            MemListDakRandX0.insert(len(MemListDakRandX0)-1,m+d+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
 
             #Kolommen as x=L (kopse gevel)
             Members_in_Set = []
@@ -427,8 +455,10 @@ if __name__ == '__main__':
             EffLengthMembers[2].append(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
             if d==0:
                 Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),(nx-1)*nodes_frame+1+kst_kol+2,n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                exclParDakRandMembersX0.append(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
             else:
                 Member(m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+d)*(kst_kol+2),n+(ny-2+d)*(kst_kol+2)+kst_kol+2,math.radians(0) ,10,10,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            MemListDakRandXL.insert(len(MemListDakRandXL)-1,m+d+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
 
             Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -458,8 +488,10 @@ if __name__ == '__main__':
         #Horizontale profielen dakrand in de kopgevels die aansluiten bij y=b
         EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
         Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1),n+((ny-2)-1)*(kst_kol+2)+kst_kol+2,nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=0
+        MemListDakRandX0.insert(len(MemListDakRandX0)-1,m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+kst_kol*(ny-1))
         EffLengthMembers[2].append(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
         Member(m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1),n+(ny-2+(ny-2))*(kst_kol+2),nx*nodes_frame-kst_kol-2,math.radians(0) ,10,10,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False}) #x=L
+        MemListDakRandXL.insert(len(MemListDakRandXL)-1,m+(ny-2)+1+2*(kst_kol+2)*(ny-2)+(2*kst_kol+1)*(ny-1))
 
         lineNodes = str(n+((ny-2)-1)*(kst_kol+2)+1) + " " + str(nodes_frame)
         linesMV_X0.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_LINE))
@@ -670,6 +702,8 @@ if __name__ == '__main__':
     MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
     MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
     MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
+    MemListRandLiggerXLr = MemListRandLiggerXL.copy(); MemListRandLiggerXLr.reverse()
+    MemListRandLiggerY0r = MemListRandLiggerY0.copy(); MemListRandLiggerY0r.reverse()
     MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
 
     MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
@@ -677,6 +711,12 @@ if __name__ == '__main__':
     MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
     MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
     MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
+
+    MemListDakRandX0 += MemListRandLiggerX0r
+    MemListDakRandXL += MemListRandLiggerXLr
+    MemListDakRandY0 += MemListRandLiggerY0r
+    MemListDakRandYB += MemListRandLiggerYBr
+
 
     LineListDak = MemberToLineList(MemListDak,members)
 
@@ -689,14 +729,25 @@ if __name__ == '__main__':
     LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
     LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
     LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
+    LineListDakRandX0 = MemberToLineList(MemListDakRandX0,members)
+    LineListDakRandXL = MemberToLineList(MemListDakRandXL,members)
+    LineListDakRandY0 = MemberToLineList(MemListDakRandY0,members)
+    LineListDakRandYB = MemberToLineList(MemListDakRandYB,members)
+
     LineListXL.reverse()
     LineListY0.reverse()
+    LineListDakRandXL.reverse()
+    LineListDakRandY0.reverse()
 
     Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersDak)})
     Surface(2,insertSpaces(LineListX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersX0)})
     Surface(3,insertSpaces(LineListXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersXL)})
     Surface(4,insertSpaces(LineListY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersY0)})
     Surface(5,insertSpaces(LineListYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersYB)})
+    Surface(6,insertSpaces(LineListDakRandX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersX0)})
+    Surface(7,insertSpaces(LineListDakRandXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersXL)})
+    Surface(8,insertSpaces(LineListDakRandY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersY0)})
+    Surface(9,insertSpaces(LineListDakRandYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersYB)})
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
@@ -758,6 +809,9 @@ if __name__ == '__main__':
 
 
     #SnowWizardMonopitch([4,9,57,52])
+
+    print(MemListDakRandY0)
+    print(MemListDakRandYB)
 
 
 
