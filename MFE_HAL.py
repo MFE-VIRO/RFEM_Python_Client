@@ -5,6 +5,11 @@ dirName = os.path.dirname(__file__)
 print('basename:    ', baseName)
 print('dirname:     ', dirName)
 sys.path.append(dirName + r'/../..')
+
+sys.stdout.write("\r                                                                       ")
+sys.stdout.write("\rIMPORTEREN BIBLIOTHEKEN\n")
+sys.stdout.flush()
+
 # dict = {'A':'1','B':'2','C':'3','D':'4','E':'5','F':'6','G':'7','H':'8',\
 #         'I':'9','J':'10','K':'11','L':'12','M':'13','N':'14','O':'15','P':'16',\
 #         'Q':'17','R':'18','S':'19','T':'20','U':'21','V':'22','W':'23','X':'24',\
@@ -140,7 +145,9 @@ if __name__ == '__main__':
 #                       GEOMETRIE
 #
 #----------------------------------------------------------------------------------------------
-
+    sys.stdout.write("\r                                                                       ")
+    sys.stdout.write("\rGEOMETRIE\n")
+    sys.stdout.flush()
 
     # Lijsten aanmaken voor staven en lijnen waarmee uiteindelijk ook de Load Transfer 2D elementen worden gedefinieerd:
     MemListRandLiggerX0 = []
@@ -287,8 +294,12 @@ if __name__ == '__main__':
 
         if ny >= 3:
             Node(n+kst_kol+4, i*dx, dy, h-h_dr)
-            Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,3,3,1,0,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
-            Members_in_Set.append(m+kst_kol+3)
+            if i==0 or i==nx-1:
+                EffLengthMembers[2].append(m+kst_kol+3)
+                Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,4,4,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            else:
+                Member(m+kst_kol+3,n+kst_kol+2,n+kst_kol+4, math.radians(0) ,3,3,1,0,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                Members_in_Set.append(m+kst_kol+3)
             if i==0: MemListRandLiggerX0.append(m+kst_kol+3)
             if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+3)
 
@@ -299,9 +310,12 @@ if __name__ == '__main__':
 
             for d in range(1,ny-2):
                 Node(n+kst_kol+d+4, i*dx, (d+1)*dy, h-h_dr)
-                EffLengthMembers[2].append(m+kst_kol+d+3)
-                Member(m+kst_kol+d+3,n+kst_kol+d+3,n+kst_kol+d+4, math.radians(0) ,3,3)
-                Members_in_Set.append(m+kst_kol+d+3)
+                if i==0 or i==nx-1:
+                    EffLengthMembers[2].append(m+kst_kol+d+3)
+                    Member(m+kst_kol+d+3,n+kst_kol+d+3,n+kst_kol+d+4, math.radians(0) ,4,4,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+                else:
+                    Member(m+kst_kol+d+3,n+kst_kol+d+3,n+kst_kol+d+4, math.radians(0) ,3,3)
+                    Members_in_Set.append(m+kst_kol+d+3)
                 if i==0: MemListRandLiggerX0.append(m+kst_kol+d+3)
                 if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+d+3)
 
@@ -316,16 +330,24 @@ if __name__ == '__main__':
         #Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
         if ny==2:
-            Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+            if i==0 or i==nx-1:
+                EffLengthMembers[2].append(m+kst_kol+ny+1)
+                Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,4,4,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            else:
+                Member(m+kst_kol+ny+1,n+kst_kol+2,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         else:
-            Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
+            if i==0 or i==nx-1:
+                EffLengthMembers[2].append(m+kst_kol+ny+1)
+                Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,4,4,1,1,params={'design_properties_via_member': True, 'design_properties_via_parent_member_set': False})
+            else:
+                Member(m+kst_kol+ny+1,n+kst_kol+ny+1,n+nodes_frame-kst_kol-1, math.radians(0) ,3,3,0,1,params={'design_properties_via_member': not DesignPropsViaParentSet, 'design_properties_via_parent_member_set': DesignPropsViaParentSet})
         if i==0: MemListRandLiggerX0.append(m+kst_kol+ny+1)
         if i==nx-1: MemListRandLiggerXL.append(m+kst_kol+ny+1)
 
         #Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
         Members_in_Set.append(m+kst_kol+ny+1)
-        if ny >= 3:
+        if ny >= 3 and i>0 and i<nx-1:
             EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Hoofdligger",params={'design_properties_activated': True})
 
@@ -680,6 +702,9 @@ if __name__ == '__main__':
 #                       INSTELLINGEN EC3 TOETSINGEN
 #
 #----------------------------------------------------------------------------------------------
+    sys.stdout.write("\r                                                                       ")
+    sys.stdout.write("\rINSTELLINGEN EC3 TOETSINGEN\n")
+    sys.stdout.flush()
 
     #Instellingen Steel Effective Lengths voor hoofdliggers maken:
     NodalSupportsList = []
@@ -808,6 +833,9 @@ if __name__ == '__main__':
 #                       BELASTINGEN
 #
 #----------------------------------------------------------------------------------------------
+    sys.stdout.write("\r                                                                       ")
+    sys.stdout.write("\rBELASTINGEN\n")
+    sys.stdout.flush()
 
     LoadCasesAndCombinations({
                     "current_standard_for_combination_wizard": 6047,
