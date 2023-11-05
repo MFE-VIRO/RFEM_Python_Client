@@ -135,6 +135,13 @@ if __name__ == '__main__':
     MemberHinge(1,"Local","",inf,inf,inf,inf,0,0)
     MemberHinge(2,"Local","",inf,inf,inf,0,0,0)
 
+#----------------------------------------------------------------------------------------------
+#
+#                       GEOMETRIE
+#
+#----------------------------------------------------------------------------------------------
+
+
     # Lijsten aanmaken voor staven en lijnen waarmee uiteindelijk ook de Load Transfer 2D elementen worden gedefinieerd:
     MemListRandLiggerX0 = []
     MemListRandLiggerXL = []
@@ -614,7 +621,65 @@ if __name__ == '__main__':
 #TODO: staafeigenschappen van schoren aanpassen (profielen aanmaken, scharnieren toevoegen, tension only)
 
 
-#TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2
+#TODO: elif toevoegen dat er nog wel horizontale gevelliggers en dakrandligger moeten worden tegevoegd als ny=2\
+
+    #Load transfer surfaces maken voor gevels en dak
+    MemListKol0Br = MemListKol0B.copy(); MemListKol0Br.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
+    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
+    MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
+    MemListRandLiggerXLr = MemListRandLiggerXL.copy(); MemListRandLiggerXLr.reverse()
+    MemListRandLiggerY0r = MemListRandLiggerY0.copy(); MemListRandLiggerY0r.reverse()
+    MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
+
+    MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
+    MemListX0 = MemListKol00 + MemListRandLiggerX0 + MemListKol0Br
+    MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
+    MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
+    MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
+
+    MemListDakRandX0 += MemListRandLiggerX0r
+    MemListDakRandXL += MemListRandLiggerXLr
+    MemListDakRandY0 += MemListRandLiggerY0r
+    MemListDakRandYB += MemListRandLiggerYBr
+
+    LineListDak = MemberToLineList(MemListDak,members)
+
+    linesMV_X0r = linesMV_X0.copy(); linesMV_X0r.reverse()
+    linesMV_XLr = linesMV_XL.copy(); linesMV_XLr.reverse()
+    linesMV_Y0r = linesMV_Y0.copy(); linesMV_Y0r.reverse()
+    linesMV_YBr = linesMV_YB.copy(); linesMV_YBr.reverse()
+
+    LineListX0 = MemberToLineList(MemListX0,members) + linesMV_X0r
+    LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
+    LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
+    LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
+    LineListDakRandX0 = MemberToLineList(MemListDakRandX0,members)
+    LineListDakRandXL = MemberToLineList(MemListDakRandXL,members)
+    LineListDakRandY0 = MemberToLineList(MemListDakRandY0,members)
+    LineListDakRandYB = MemberToLineList(MemListDakRandYB,members)
+
+    LineListXL.reverse()
+    LineListY0.reverse()
+    LineListDakRandXL.reverse()
+    LineListDakRandY0.reverse()
+
+    Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersDak)})
+    Surface(2,insertSpaces(LineListX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersX0)})
+    Surface(3,insertSpaces(LineListXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersXL)})
+    Surface(4,insertSpaces(LineListY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersY0)})
+    Surface(5,insertSpaces(LineListYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersYB)})
+    Surface(6,insertSpaces(LineListDakRandX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersX0)})
+    Surface(7,insertSpaces(LineListDakRandXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersXL)})
+    Surface(8,insertSpaces(LineListDakRandY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersY0)})
+    Surface(9,insertSpaces(LineListDakRandYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersYB)})
+
+#----------------------------------------------------------------------------------------------
+#
+#                       INSTELLINGEN EC3 TOETSINGEN
+#
+#----------------------------------------------------------------------------------------------
 
     #Instellingen Steel Effective Lengths voor hoofdliggers maken:
     NodalSupportsList = []
@@ -700,7 +765,7 @@ if __name__ == '__main__':
     SteelEffectiveLengths(4, insertSpaces(EffLengthMembers[3]), insertSpaces(EffLengthSets[3]), False, False, False, True, True, False, 'SEL4', NodalSupportsList, intermediate_nodes=False,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
-    #Instellingen Steel Effective Lengths voor kolommen maken:
+    #Instellingen Steel Effective Lengths voor hoekkolommen maken:
     NodalSupportsList = []
     NodalSupportsList.append([SteelEffectiveLengthsSupportType.SUPPORT_TYPE_FIXED_IN_Z_Y_AND_TORSION, True, 0.0, \
                                 SteelEffectiveLengthsEccentricityType.ECCENTRICITY_TYPE_NONE, 0,0,0,0, \
@@ -728,64 +793,21 @@ if __name__ == '__main__':
     SteelDesignServiceabilityConfigurations(1,"EC3 checks BGT")
     #BeamLimitCharacteristic(134,1)
 
-    #Load transfer surfaces maken voor gevels en dak
-    MemListKol0Br = MemListKol0B.copy(); MemListKol0Br.reverse()
-    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
-    MemListKolL0r = MemListKolL0.copy(); MemListKolL0r.reverse()
-    MemListKolLBr = MemListKolLB.copy(); MemListKolLBr.reverse()
-    MemListRandLiggerX0r = MemListRandLiggerX0.copy(); MemListRandLiggerX0r.reverse()
-    MemListRandLiggerXLr = MemListRandLiggerXL.copy(); MemListRandLiggerXLr.reverse()
-    MemListRandLiggerY0r = MemListRandLiggerY0.copy(); MemListRandLiggerY0r.reverse()
-    MemListRandLiggerYBr = MemListRandLiggerYB.copy(); MemListRandLiggerYBr.reverse()
-
-    MemListDak = MemListRandLiggerY0 + MemListRandLiggerXL + MemListRandLiggerYBr + MemListRandLiggerX0r
-    MemListX0 = MemListKol00 + MemListRandLiggerX0 + MemListKol0Br
-    MemListXL = MemListKolL0 + MemListRandLiggerXL + MemListKolLBr
-    MemListY0 = MemListKol00 + MemListRandLiggerY0 + MemListKolL0r
-    MemListYB = MemListKol0B + MemListRandLiggerYB + MemListKolLBr
-
-    MemListDakRandX0 += MemListRandLiggerX0r
-    MemListDakRandXL += MemListRandLiggerXLr
-    MemListDakRandY0 += MemListRandLiggerY0r
-    MemListDakRandYB += MemListRandLiggerYBr
-
-
-    LineListDak = MemberToLineList(MemListDak,members)
-
-    linesMV_X0r = linesMV_X0.copy(); linesMV_X0r.reverse()
-    linesMV_XLr = linesMV_XL.copy(); linesMV_XLr.reverse()
-    linesMV_Y0r = linesMV_Y0.copy(); linesMV_Y0r.reverse()
-    linesMV_YBr = linesMV_YB.copy(); linesMV_YBr.reverse()
-
-    LineListX0 = MemberToLineList(MemListX0,members) + linesMV_X0r
-    LineListXL = MemberToLineList(MemListXL,members) + linesMV_XLr
-    LineListY0 = MemberToLineList(MemListY0,members) + linesMV_Y0r
-    LineListYB = MemberToLineList(MemListYB,members) + linesMV_YBr
-    LineListDakRandX0 = MemberToLineList(MemListDakRandX0,members)
-    LineListDakRandXL = MemberToLineList(MemListDakRandXL,members)
-    LineListDakRandY0 = MemberToLineList(MemListDakRandY0,members)
-    LineListDakRandYB = MemberToLineList(MemListDakRandYB,members)
-
-    LineListXL.reverse()
-    LineListY0.reverse()
-    LineListDakRandXL.reverse()
-    LineListDakRandY0.reverse()
-
-    Surface(1,insertSpaces(LineListDak),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersDak)})
-    Surface(2,insertSpaces(LineListX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersX0)})
-    Surface(3,insertSpaces(LineListXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersXL)})
-    Surface(4,insertSpaces(LineListY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersY0)})
-    Surface(5,insertSpaces(LineListYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParMembersYB)})
-    Surface(6,insertSpaces(LineListDakRandX0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersX0)})
-    Surface(7,insertSpaces(LineListDakRandXL),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersXL)})
-    Surface(8,insertSpaces(LineListDakRandY0),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersY0)})
-    Surface(9,insertSpaces(LineListDakRandYB),params={'geometry':'GEOMETRY_PLANE','type':'TYPE_LOAD_TRANSFER','load_transfer_direction':"LOAD_TRANSFER_DIRECTION_IN_X",'load_distribution':"LOAD_DISTRIBUTION_VARYING",'excluded_parallel_to_members':insertSpaces(exclParDakRandMembersYB)})
+#----------------------------------------------------------------------------------------------
+#
+#                       STATIC ANALYSIS SETTINGS
+#
+#----------------------------------------------------------------------------------------------
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
     StaticAnalysisSettings.SecondOrderPDelta(2, "SecondOrder")
     StaticAnalysisSettings.LargeDeformation(3, "LargeDeformation")
 
-#BELASTINGEN
+#----------------------------------------------------------------------------------------------
+#
+#                       BELASTINGEN
+#
+#----------------------------------------------------------------------------------------------
 
     LoadCasesAndCombinations({
                     "current_standard_for_combination_wizard": 6047,
