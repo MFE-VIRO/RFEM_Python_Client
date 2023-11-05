@@ -31,6 +31,7 @@ from RFEM.BasicObjects.memberSet import MemberSet
 from RFEM.BasicObjects.surface import Surface
 from RFEM.TypesForNodes.nodalSupport import NodalSupport
 from RFEM.TypesForMembers.memberHinge import MemberHinge
+from RFEM.TypesForMembers.memberNonlinearity import MemberNonlinearity
 from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisSettings
 from RFEM.LoadCasesAndCombinations.designSituation import clearAttributes, DesignSituation
 from RFEM.LoadCasesAndCombinations.loadCase import LoadCase
@@ -139,6 +140,8 @@ if __name__ == '__main__':
 
     MemberHinge(1,"Local","",inf,inf,inf,inf,0,0)
     MemberHinge(2,"Local","",inf,inf,inf,0,0,0)
+
+    #MemberNonlinearity(1,"")
 
 #----------------------------------------------------------------------------------------------
 #
@@ -573,7 +576,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(90), 14, 14)
+        Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(90)], 14)
 
     #Schoren in dakvlak maken:
 
@@ -590,7 +593,7 @@ if __name__ == '__main__':
         for m in xyzxyzList:
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 12, 12)
+            Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(0)], 12)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
@@ -615,7 +618,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-        Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(90), 13, 13)
+        Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(90)], 13)
 
     #Schoren in dakvlak (in y-richting) maken:
 
@@ -635,7 +638,7 @@ if __name__ == '__main__':
                 t+=1
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
-            Member(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"], math.radians(0), 11, 11)
+            Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(0)], 11)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
 
