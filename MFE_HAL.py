@@ -836,7 +836,7 @@ if __name__ == '__main__':
 
 
     Sneeuw(L,b,dhr,1)
-    Wind(qpz,L,b,h,h_dr,dhr,1)
+
 
 
     #SnowWizardMonopitch([4,9,57,52])
@@ -854,4 +854,4 @@ if __name__ == '__main__':
 #
 #----------------------------------------------------------------------------------------------
 
-WindParameters = [{},{}]
+    Wind(qpz,L,b,h,h_dr,dhr,1)
