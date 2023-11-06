@@ -129,7 +129,7 @@ def Wind(
     Wdr_Ex = qpz*(cpe[4][0]-cpe[3])
     Wdr_Ey = qpz*(cpe[4][1]-cpe[3])
 
-    Model.clientModel.service.begin_modification()
+    # Model.clientModel.service.begin_modification()
 
     BaseNode = Node.GetNode(BaseNodeNo,model)
     xb = BaseNode.coordinate_1
@@ -272,7 +272,7 @@ def Wind(
     WindFreeRecLoad(414,"9","XZ",Wdr_Dy,[xb,zb+h-dhr,xb+b[1],zb+h],"Zone D+E: " + str(qpz) + "·(" + cpe_str[3] + cpe_str_inv[4][1] + ") = " + str(round(Wdr_Dy,2)) + " kN/m²")
     WindFreeRecLoad(414,"8","XZ",Wdr_Ey,[xb,zb+h-dhr,xb+b[1],zb+h],"Zone D+E: " + str(qpz) + "·(" + cpe_str[4][1] + cpe_str_inv[3] + ") = " + str(round(Wdr_Ey,2)) + " kN/m²")
 
-    Model.clientModel.service.finish_modification()
+    # Model.clientModel.service.finish_modification()
 
 if __name__ == '__main__':
     Model(False, "MFE_HAL")

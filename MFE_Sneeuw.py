@@ -33,7 +33,7 @@ def Sneeuw(
         model = Model
         ):
 
-    Model.clientModel.service.begin_modification()
+    # Model.clientModel.service.begin_modification()
 
     BaseNode = Node.GetNode(BaseNodeNo,model)
     xb = BaseNode.coordinate_1
@@ -42,7 +42,7 @@ def Sneeuw(
 
     SnowFreeRecLoad(300,"1",-0.56,[xb,yb,xb+Lx,yb+Ly])
 
-    Model.clientModel.service.finish_modification()
+    # Model.clientModel.service.finish_modification()
 
 if __name__ == '__main__':
     Model(False, "MFE_HAL")

@@ -9,7 +9,7 @@ from RFEM.initModel import Model
 from RFEM.Tools.GetObjectNumbersByType import GetAllObjects
 
 # Define name of the model from which the data should be exported
-model_name = 'MFE_HAL.rf6'
+model_name = 'TEMPONLY.rf6'
 
 # Connect to model
 model = Model(False, model_name)
