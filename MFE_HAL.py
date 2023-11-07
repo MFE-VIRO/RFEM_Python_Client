@@ -546,6 +546,7 @@ if __name__ == '__main__':
 
     nodes = MFE_getNodes.getNodes()             # met deze lijst kan je knopen opzoeken op basis van hun coördinaten
     members = MFE_getMembers.getMembers()       # met deze lijst kan je staven opzoeken op basis van hun begin- en eindknoop
+    TensionMembers = []
 
     print("T3 = " + str(time.time()-time1) + "s")
     time1 = time.time()
@@ -576,6 +577,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+        TensionMembers.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
         Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(90)], 14)
 
     #Schoren in dakvlak maken:
@@ -593,6 +595,7 @@ if __name__ == '__main__':
         for m in xyzxyzList:
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+            TensionMembers.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
             Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(0)], 12)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
@@ -618,6 +621,7 @@ if __name__ == '__main__':
             t+=1
         Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
         Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+        TensionMembers.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
         Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(90)], 13)
 
     #Schoren in dakvlak (in y-richting) maken:
@@ -638,6 +642,7 @@ if __name__ == '__main__':
                 t+=1
             Node1 = MFE_ZoekNode.ZoekNode(m[0],m[1],m[2],Model,nodes)
             Node2 = MFE_ZoekNode.ZoekNode(m[3],m[4],m[5],Model,nodes)
+            TensionMembers.append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER))
             Member.Tension(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER),Node1["no"],Node2["no"],MemberRotationSpecificationType.COORDINATE_SYSTEM_ROTATION_VIA_ANGLE, [math.radians(0)], 11)
 
         Model.clientModel.service.finish_modification(); Model.clientModel.service.begin_modification()
@@ -880,7 +885,7 @@ if __name__ == '__main__':
     # LoadCase.StaticAnalysis(900, 'PB: Equipement - lege gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
     # LoadCase.StaticAnalysis(910, 'PB: Equipement - operationele gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     # LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
-
+    LoadCase.StaticAnalysis(990, 'Voorspanning trekschoren',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PRESTRESS_P, self_weight=[False])
 
 
 
@@ -910,6 +915,14 @@ if __name__ == '__main__':
 w = CombinationWizard(1,consider_imperfection_case=False, params={'consider_initial_state': False,'structure_modification_enabled': False})
 DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B,True,'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b',params={'combination_wizard': 1})
 DesignSituation(2,DesignSituationType.DESIGN_SITUATION_TYPE_SLS_CHARACTERISTIC,True,'SLS - Characteristic',params={'combination_wizard': 1})
+
+
+#VOORSPANNING
+
+MemberLoad.InitialPrestress(1,990,insertSpaces(TensionMembers),MemberLoadDirection.LOAD_DIRECTION_LOCAL_X,100)
+
+
+
 
 Model.clientModel.service.finish_modification()
 Calculate_all()
