@@ -107,6 +107,9 @@ if __name__ == '__main__':
     sup_nodes = []
     b = (ny-1)*dy
     L = (nx-1)*dx
+    GewichtGevel = 0.3 # Gewicht gevel in kN/m²
+    PB_Dak = 0.5 # Gewicht dakplaten en dakbedekking in kN/m²
+
     qpz = 1.11 # "Winddruk in kN/m2 : "
 
     nodes=[]
@@ -856,8 +859,8 @@ if __name__ == '__main__':
                  model= Model)
 
     LoadCase.StaticAnalysis(10, 'PB: Eigen Gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[True, 0.0, 0.0, -1.0])
-    # LoadCase.StaticAnalysis(20, 'PB: Vloerafwerking en dakbedekking',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
-    # LoadCase.StaticAnalysis(30, 'PB: Gevelbekleding',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(20, 'PB: Vloerafwerking en dakbedekking',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
+    LoadCase.StaticAnalysis(30, 'PB: Gevelbekleding',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
     # LoadCase.StaticAnalysis(40, 'PB: Trappen, leuningen en bordessen',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
     # LoadCase.StaticAnalysis(50, 'PB: Klein installatie werk (gelijkmatig verdeeld)',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     # LoadCase.StaticAnalysis(60, 'PB: Grote leidingen en leidingsupports',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
@@ -887,21 +890,9 @@ if __name__ == '__main__':
     # LoadCase.StaticAnalysis(920, 'PB: Equipement - test gewicht',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_IMPOSED_GQ, self_weight=[False])
     LoadCase.StaticAnalysis(990, 'Voorspanning trekschoren',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PRESTRESS_P, self_weight=[False])
 
-
-
-
     Sneeuw(L,b,dhr,1)
 
-
-
     #SnowWizardMonopitch([4,9,57,52])
-
-    print(MemListDakRandY0)
-    print(MemListDakRandYB)
-
-
-
-
 
 #----------------------------------------------------------------------------------------------
 #
@@ -926,3 +917,8 @@ MemberLoad.InitialPrestress(1,990,insertSpaces(TensionMembers),MemberLoadDirecti
 
 Model.clientModel.service.finish_modification()
 Calculate_all()
+
+
+MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,17)
+MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,2,False)
+print("test")
