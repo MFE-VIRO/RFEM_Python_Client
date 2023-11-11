@@ -9,7 +9,7 @@ parameter = 'internal_force_vz'
 Model(False,Naam_Model)
 
 MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,StaafNummer)
-MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,3,True)
+MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_LOAD_COMBINATION,2,4,True)
 MinV = f'{GetMinValue(MIF,parameter):.2f}' # f string formatting voor 2 decimale getallen
 MaxV = f'{GetMaxValue(MIF,parameter):.2f}' # f string formatting voor 2 decimale getallen
 print("MIF staaf " + str(StaafNummer) + ":")
