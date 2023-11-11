@@ -56,8 +56,6 @@ from MFE_Sneeuw import Sneeuw
 
 import math
 
-print("T1 = " + str(time.time()-time1) + "s")
-
 # print(ord("a"))
 EffLengthMembers = [[],[],[],[],[]]
 EffLengthSets = [[],[],[],[],[]]
@@ -551,9 +549,6 @@ if __name__ == '__main__':
     members = MFE_getMembers.getMembers()       # met deze lijst kan je staven opzoeken op basis van hun begin- en eindknoop
     TensionMembers = []
 
-    print("T3 = " + str(time.time()-time1) + "s")
-    time1 = time.time()
-
     #Schoren in langsgevels maken:
     xyzxyzList = []
 
@@ -921,4 +916,6 @@ Calculate_all()
 
 MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,17)
 MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,2,False)
+
 print("test")
+print("T1 = " + str(time.time()-time1) + "s")
