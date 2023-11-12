@@ -1,4 +1,4 @@
-def Kolomletter(KolomGetal: int=1):
+def KolomLetter(KolomGetal: int=1):
     if int(KolomGetal/26.00001)>0:
         Letter=chr(int(KolomGetal/26.00001)+64) + chr(KolomGetal-26*int(KolomGetal/26.00001)+64)
     else:

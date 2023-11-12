@@ -48,6 +48,7 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
+from MFE_ALG import *
 import MFE_KolomLetter
 import MFE_ZoekNode
 import MFE_getMembers
@@ -124,17 +125,17 @@ if __name__ == '__main__':
     # Model.clientModel.service.begin_modification()
 
     Material(1, 'S235')
-    Section(1, 'HEA 240', 1, "Profiel Kolommen 1")
-    Section(2, 'HEA 200', 1, "Profiel Kolommen 2")
-    Section(3, 'IPE 400', 1, "Profiel Hoofdliggers")
-    Section(4, 'HEA 160', 1, "Profiel Dakliggers KOPSE GEVELS")
-    Section(5, 'HEA 140', 1, "Profiel Dakliggers LANGSGEVELS")
+    Section(1, 'HEA 240 | Euronorm 53-62; ... | SZS', 1, "Profiel Kolommen 1")
+    Section(2, 'HEA 200 | Euronorm 53-62; ... | SZS', 1, "Profiel Kolommen 2")
+    Section(3, 'IPE 400 | Euronorm 19-57; ... | SZS', 1, "Profiel Hoofdliggers")
+    Section(4, 'HEA 160 | Euronorm 53-62; ... | SZS', 1, "Profiel Dakliggers KOPSE GEVELS")
+    Section(5, 'HEA 140 | Euronorm 53-62; ... | SZS', 1, "Profiel Dakliggers LANGSGEVELS")
     Section(6, 'SHS 100x5 | EN 10210-2:2006-04', 1, "Profiel Kipsteunen dak")
     Section(7, 'SHS 80x4 | EN 10210-2:2006-04', 1, "Profiel Horizontale gevelliggers KOPSE GEVELS")
-    Section(8, 'HEA 100', 1, "Profiel Horizontale gevelliggers LANGSGEVELS")
+    Section(8, 'HEA 100 | Euronorm 53-62; ... | SZS', 1, "Profiel Horizontale gevelliggers LANGSGEVELS")
 
-    Section(9, 'HEA 100', 1, "Profiel Dakrand Verticaal")
-    Section(10, 'HEA 100', 1, "Profiel Dakrand Horizontaal")
+    Section(9, 'HEA 100 | Euronorm 53-62; ... | SZS', 1, "Profiel Dakrand Verticaal")
+    Section(10, 'HEA 100 | Euronorm 53-62; ... | SZS', 1, "Profiel Dakrand Horizontaal")
     Section(11, 'L 90x90x9', 1, "Schoren Dak 1")
     Section(12, 'L 90x90x9', 1, "Schoren Dak 2")
     Section(13, 'FL 150x10', 1, "Schoren Gevel 1")
@@ -287,7 +288,7 @@ if __name__ == '__main__':
         if kst_kol >= 1:
             if i==0 or i==nx-1: EffLengthSets[4].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             else: EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(ny) + str(i+1),params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name': "Kolom " + MFE_KolomLetter.Kolomletter(ny) + str(i+1)})
+            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + KolomLetter(ny) + str(i+1),params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name': "Kolom " + KolomLetter(ny) + str(i+1)})
 
     #Hoofdliggers maken
         Members_in_Set = []
@@ -439,7 +440,7 @@ if __name__ == '__main__':
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
                 EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + "1",params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name':"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + "1"})
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + KolomLetter(d+2) + "1",params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name':"Kolom " + KolomLetter(d+2) + "1"})
 
             #Verticaal profiel dakrand x=0
             Node(n+d*(kst_kol+2)+kst_kol+2, 0.0, (d+1)*dy, h)
@@ -482,7 +483,7 @@ if __name__ == '__main__':
             Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
                 EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + str(i+1),params={'design_properties_activated': True,  'user_defined_name_enabled': True, 'name':"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + str(i+1)})
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + KolomLetter(d+2) + str(i+1),params={'design_properties_activated': True,  'user_defined_name_enabled': True, 'name':"Kolom " + KolomLetter(d+2) + str(i+1)})
 
             #Verticaal profiel dakrand x=L
             Node(n+(ny-2+d)*(kst_kol+2)+kst_kol+2, (nx-1)*dx, (d+1)*dy, h)
@@ -737,7 +738,7 @@ if __name__ == '__main__':
                                 SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
                                 ""])
 
-    SteelEffectiveLengths(1, insertSpaces(EffLengthMembers[0]), insertSpaces(EffLengthSets[0]), False, False, False, True, True, False, 'SEL1', NodalSupportsList, intermediate_nodes=True,
+    SteelEffectiveLengths(1, insertSpaces(EffLengthMembers[0]), insertSpaces(EffLengthSets[0]), False, False, False, True, True, True, 'SEL1', NodalSupportsList, intermediate_nodes=True,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
     #Instellingen Steel Effective Lengths voor kolommen maken:
@@ -760,7 +761,7 @@ if __name__ == '__main__':
                                 SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
                                 ""])
 
-    SteelEffectiveLengths(2, insertSpaces(EffLengthMembers[1]), insertSpaces(EffLengthSets[1]), True, True, False, True, False, True, 'SEL2', NodalSupportsList, intermediate_nodes=True,
+    SteelEffectiveLengths(2, insertSpaces(EffLengthMembers[1]), insertSpaces(EffLengthSets[1]), True, True, False, True, True, True, 'SEL2', NodalSupportsList, intermediate_nodes=True,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
     #Instellingen Steel Effective Lengths voor andere liggers maken:
@@ -777,7 +778,7 @@ if __name__ == '__main__':
                                 SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
                                 ""])
 
-    SteelEffectiveLengths(3, insertSpaces(EffLengthMembers[2]), insertSpaces(EffLengthSets[2]), False, False, False, True, True, False, 'SEL3', NodalSupportsList, intermediate_nodes=False,
+    SteelEffectiveLengths(3, insertSpaces(EffLengthMembers[2]), insertSpaces(EffLengthSets[2]), False, False, False, True, True, True, 'SEL3', NodalSupportsList, intermediate_nodes=False,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
     #Instellingen Steel Effective Lengths voor verticale dakrandprofielen maken:
@@ -794,7 +795,7 @@ if __name__ == '__main__':
                                 SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
                                 ""])
 
-    SteelEffectiveLengths(4, insertSpaces(EffLengthMembers[3]), insertSpaces(EffLengthSets[3]), False, False, False, True, True, False, 'SEL4', NodalSupportsList, intermediate_nodes=False,
+    SteelEffectiveLengths(4, insertSpaces(EffLengthMembers[3]), insertSpaces(EffLengthSets[3]), False, False, False, True, True, True, 'SEL4', NodalSupportsList, intermediate_nodes=False,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
     #Instellingen Steel Effective Lengths voor hoekkolommen maken:
@@ -817,7 +818,7 @@ if __name__ == '__main__':
                                 SteelEffectiveLengthsRestraintTypeAboutZ.SUPPORT_STATUS_NO, SteelEffectiveLengthsRestraintTypeWarping.SUPPORT_STATUS_NO, \
                                 ""])
 
-    SteelEffectiveLengths(5, insertSpaces(EffLengthMembers[4]), insertSpaces(EffLengthSets[4]), True, True, False, True, False, True, 'SEL5', NodalSupportsList, intermediate_nodes=True,
+    SteelEffectiveLengths(5, insertSpaces(EffLengthMembers[4]), insertSpaces(EffLengthSets[4]), True, True, False, True, True, True, 'SEL5', NodalSupportsList, intermediate_nodes=True,
                           different_properties=True, determination_of_mcr=SteelEffectiveLengthsDeterminationMcrEurope.DETERMINATION_EUROPE_EIGENVALUE)
 
 
