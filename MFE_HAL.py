@@ -48,6 +48,7 @@ from RFEM.TypesForSteelDesign.steelEffectiveLengths import SteelEffectiveLengths
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
+import MFE_KolomLetter
 import MFE_ZoekNode
 import MFE_getMembers
 import MFE_getNodes
@@ -244,7 +245,7 @@ if __name__ == '__main__':
         if kst_kol >= 1:
             if i==0 or i==nx-1: EffLengthSets[4].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             else: EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom",params={'design_properties_activated': True})
+            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom A" + str(i+1),params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name': "Kolom A" + str(i+1)})
 
 
     #Kolommen op y = b maken
@@ -286,7 +287,7 @@ if __name__ == '__main__':
         if kst_kol >= 1:
             if i==0 or i==nx-1: EffLengthSets[4].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
             else: EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom",params={'design_properties_activated': True})
+            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(ny) + str(i+1),params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name': "Kolom " + MFE_KolomLetter.Kolomletter(ny) + str(i+1)})
 
     #Hoofdliggers maken
         Members_in_Set = []
@@ -353,7 +354,7 @@ if __name__ == '__main__':
         Members_in_Set.append(m+kst_kol+ny+1)
         if ny >= 3 and i>0 and i<nx-1:
             EffLengthSets[0].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Hoofdligger",params={'design_properties_activated': True})
+            MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Hoofdligger as " + str(i+1),params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name': "Hoofdligger as " + str(i+1)})
 
     #Dakrand verticale en horizontale profielen maken
         Node(n+kst_kol+3, i*dx, 0, h)
@@ -438,7 +439,7 @@ if __name__ == '__main__':
             Members_in_Set.append(m+d*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
                 EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2",params={'design_properties_activated': True})
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + "1",params={'design_properties_activated': True, 'user_defined_name_enabled': True, 'name':"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + "1"})
 
             #Verticaal profiel dakrand x=0
             Node(n+d*(kst_kol+2)+kst_kol+2, 0.0, (d+1)*dy, h)
@@ -481,7 +482,7 @@ if __name__ == '__main__':
             Members_in_Set.append(m+(ny-2+d)*(kst_kol+2)+kst_kol+1)
             if kst_kol >= 1:
                 EffLengthSets[1].append(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET))
-                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom 2",params={'design_properties_activated': True})
+                MemberSet(FirstFreeIdNumber(ObjectTypes.E_OBJECT_TYPE_MEMBER_SET), insertSpaces(Members_in_Set),SetType.SET_TYPE_CONTINUOUS,"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + str(i+1),params={'design_properties_activated': True,  'user_defined_name_enabled': True, 'name':"Kolom " + MFE_KolomLetter.Kolomletter(d+2) + str(i+1)})
 
             #Verticaal profiel dakrand x=L
             Node(n+(ny-2+d)*(kst_kol+2)+kst_kol+2, (nx-1)*dx, (d+1)*dy, h)
