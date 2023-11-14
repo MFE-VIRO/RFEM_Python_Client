@@ -21,7 +21,7 @@ import math
 
 if __name__ == '__main__':
     Model(True, "ExampleMIFbySection.rf6")
-    Model.clientModel.service.delete_all()
+    # Model.clientModel.service.delete_all()
     Model.clientModel.service.begin_modification()
     BaseSettings(9.81, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN)
 
@@ -39,7 +39,10 @@ if __name__ == '__main__':
 
     Member(21, 1, 2, 0, 11, 11)
     Member(22, 3, 4, 0, 12, 12)
-    Member(22, 5, 6, 0, 12, 12)
+    Member(23, 5, 6, 0, 12, 12)
+
+    NodalSupport(1, '1 3 5', [inf, inf, inf, inf, 0.0, 0.0])
+    NodalSupport(2, '2 4 6', [0.0, inf, inf, inf, 0.0, 0.0])
 
     StaticAnalysisSettings.GeometricallyLinear(1, "Linear")
 
@@ -57,22 +60,22 @@ if __name__ == '__main__':
     LoadCase.StaticAnalysis(20, 'DL: Other dead loads',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_PERMANENT_G, self_weight=[False])
     LoadCase.StaticAnalysis(100, 'LL: Imposed loads',analysis_settings_no=1,action_category=ActionCategoryType.ACTION_CATEGORY_IMPOSED_LOADS_CATEGORY_B_OFFICE_AREAS_QI_B, self_weight=[False])
 
-    CombinationWizard(1,consider_imperfection_case=False)
-    DesignSituation(1,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B,
+    CombinationWizard(31,consider_imperfection_case=False, params={'consider_initial_state': False,'structure_modification_enabled': False})
+    DesignSituation(41,DesignSituationType.DESIGN_SITUATION_TYPE_STR_PERMANENT_AND_TRANSIENT_6_10A_6_10B,
                     True,'ULS (STR/GEO) - Permanent and transient - Eq. 6.10a and 6.10b',
-                    params={'combination_wizard': 1})
+                    params={'combination_wizard': 31})
 
-    MemberLoad(1,5,insertSpaces(TensionMembers),MemberLoadDirection.LOAD_DIRECTION_LOCAL_X,100)
+    MemberLoad(1,20,"21",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-5000)
+    MemberLoad(2,20,"22",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-5000)
+    MemberLoad(3,20,"23",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-5000)
+    MemberLoad(1,100,"21",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-15000)
+    MemberLoad(2,100,"22",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-15000)
+    MemberLoad(3,100,"23",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-15000)
 
+    Model.clientModel.service.finish_modification()
 
+    Calculate_all()
 
+    MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,41,12,False)
 
-Model.clientModel.service.finish_modification()
-Calculate_all()
-
-
-MIF = ResultTables.MembersInternalForces(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,17)
-MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,1,2,False)
-
-print("test")
-print("T1 = " + str(time.time()-time1) + "s")
+    # print(str(MIFS('internal_force_vz')))
