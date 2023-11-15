@@ -72,10 +72,20 @@ if __name__ == '__main__':
     MemberLoad(2,100,"22",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-15000)
     MemberLoad(3,100,"23",MemberLoadDirection.LOAD_DIRECTION_GLOBAL_Z_OR_USER_DEFINED_W_TRUE,-15000)
 
+
     Model.clientModel.service.finish_modification()
 
     Calculate_all()
 
+    # I want to know the governing member internal forces in members with cross-section 12 (IPE 240; members 22 and 23)
+    # for ULS DesignSituation (no 41):
+
     MIFS = ResultTables.MembersInternalForcesBySection(CaseObjectType.E_OBJECT_TYPE_DESIGN_SITUATION,41,12,False)
 
-    # print(str(MIFS('internal_force_vz')))
+    # When printing MIFS, I get the following list:
+    # {'node_number': 1.0, 'internal_force_vz': 10279.0302734375, 'internal_force_n': 0.0, 'location': 0.0,
+    # 'internal_force_mz': 0.0, 'internal_force_label': 'M<sub>z</sub>', 'member_number': 21.0, 'location_flags': 'L | M',
+    # 'internal_force_my': 0.0, 'specification': 'CO13', 'internal_force_vy': 0.0, 'internal_force_mt': 0.0}]
+    print(MIFS)
+
+
