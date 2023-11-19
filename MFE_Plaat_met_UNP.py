@@ -11,7 +11,8 @@ maxRelUitnPr = 1.00 # = Maximale relatieve uitnutting van de vloeispanning van h
 uRelMaxPl = 1/500
 uRelMaxPr = 1/500
 
-p = 4.85*10.5*1.35 # = hydrostatic waterpressure in kN/m²
+p_k = 4.85*10.5 # = hydrostatic waterpressure in kN/m²
+p_Ed = p_k*1.35 # = hydrostatic waterpressure in kN/m²
 
 Results = []
 
@@ -28,10 +29,10 @@ for profiel in profielen:
     for t in t_list:
         MRdPl = 1/6*1000*t**2*maxRelUitnPl*fyPl # =Toelaatbaar moment in de plaat in Nmm
         MRdPr = profiel['W_z_el']*maxRelUitnPr*fyPr # =Toelaatbaar moment in het profiel in Nmm
-        ctcPrM = MRdPr/(1/8*p*0.001*Lpr**2)
-        ctcPlM = math.sqrt(MRdPl/(1/8*p))
-        ctcPlU = (uRelMaxPl*192*E*1/12*1000*t**3/p)**(1/3)
-        ctcPrU = (uRelMaxPr*384*E*profiel['I_z_el'])/(5*p*0.001*Lpr**3)
+        ctcPrM = MRdPr/(1/8*p_Ed*0.001*Lpr**2)
+        ctcPlM = math.sqrt(MRdPl/(1/8*p_Ed))
+        ctcPlU = (uRelMaxPl*192*E*1/12*1000*t**3/p_k)**(1/3)
+        ctcPrU = (uRelMaxPr*384*E*profiel['I_z_el'])/(5*p_k*0.001*Lpr**3)
         ctc = min(ctcPlM,ctcPlU,ctcPrM,ctcPrU)
         Weight = t/1000*RhoS+profiel['G']*1000/ctc
         Results.append([profiel['naam'],t,round(ctc),round(Weight,1)])
