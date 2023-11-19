@@ -24,9 +24,6 @@ profielen = [{'naam':'UNP80','G8':8.82,'G':8.65,'A':1102,'I_z_el':1060000,'W_z_e
              {'naam':'UNP180','G8':22.40,'G':21.96,'A':2797,'I_z_el':13540000,'W_z_el':150000},
              {'naam':'UNP200','G8':25.70,'G':25.26,'A':3218,'I_z_el':19110000,'W_z_el':191000}]
 
-
-
-
 for profiel in profielen:
     for t in t_list:
         MRdPl = 1/6*1000*t**2*maxRelUitnPl*fyPl # =Toelaatbaar moment in de plaat in Nmm
