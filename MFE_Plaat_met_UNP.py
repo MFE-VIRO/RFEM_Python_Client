@@ -3,13 +3,13 @@ from operator import itemgetter
 
 Lpr = 1400 # = lengte UNP profiel in mm.
 fyPl = 235
-fyPr = 355
+fyPr = 235
 E = 210000
 RhoS = 7850 # soortelijk gewicht staal in kg/m3
-maxRelUitnPl = 0.60 # = Maximale relatieve uitnutting van de vloeispanning van de plaat. Maximale waarde is 1.00.
-maxRelUitnPr = 0.80 # = Maximale relatieve uitnutting van de vloeispanning van het profiel. Maximale waarde is 1.00.
-uRelMaxPl = 1/200
-uRelMaxPr = 1/333
+maxRelUitnPl = 1.00 # = Maximale relatieve uitnutting van de vloeispanning van de plaat. Maximale waarde is 1.00.
+maxRelUitnPr = 1.00 # = Maximale relatieve uitnutting van de vloeispanning van het profiel. Maximale waarde is 1.00.
+uRelMaxPl = 1/500
+uRelMaxPr = 1/500
 
 p = 4.85*10.5*1.35 # = hydrostatic waterpressure in kN/m²
 
