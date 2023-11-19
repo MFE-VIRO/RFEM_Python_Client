@@ -49,7 +49,7 @@ from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
 from RFEM.Results.designOverview import GetDesignOverview, GetPartialDesignOverview
 
 from MFE_ALG import *
-import MFE_KolomLetter
+# import MFE_KolomLetter
 import MFE_ZoekNode
 import MFE_getMembers
 import MFE_getNodes
