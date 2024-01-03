@@ -7,7 +7,8 @@ PROJECT_ROOT = os.path.abspath(os.path.join(
 sys.path.append(PROJECT_ROOT)
 from RFEM.Reports.printoutReport import PrintoutReport
 from RFEM.Reports.html import ExportResultTablesToHtml
-from RFEM.initModel import Model, url, closeModel, openFile, getPathToRunningRFEM
+from RFEM.initModel import Model, closeModel, openFile, getPathToRunningRFEM
+from RFEM.connectionGlobals import url
 from shutil import rmtree
 import pytest
 import time
@@ -58,7 +59,7 @@ def test_printout_report():
     PrintoutReport.exportToHTML(1, htmlPath)
     PrintoutReport.exportToPDF(2, pdfPath)
 
-    time.sleep(1)
+    time.sleep(2)
 
     assert os.path.exists(htmlPath)
     assert os.path.exists(pdfPath) # this check creates timeouts
