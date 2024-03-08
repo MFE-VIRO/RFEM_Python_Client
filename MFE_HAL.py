@@ -94,14 +94,14 @@ def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
 
 
 if __name__ == '__main__':
-    dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
-    dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 5 #int(input("Aantal assen in x-richting: "))
-    ny = 4 #int(input("Aantal assen in y-richting: "))
-    h = 6.5 #float(input("Hoogte hal incl. dakrand [m]: "))
+    dy = 3 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
+    dx = 3 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
+    nx = 10 #int(input("Aantal assen in x-richting: "))
+    ny = 5 #int(input("Aantal assen in y-richting: "))
+    h = 6 #float(input("Hoogte hal incl. dakrand [m]: "))
     h_dr = 0.5 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
     dhr = 0.2 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
-    kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
+    kst_kol = 1 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
     sup_nodes = []
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     Model(True, "MFE_HAL")
     Model.clientModel.service.delete_all()
     Model.clientModel.service.begin_modification()
-    BaseSettings(9.81, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN)
+    BaseSettings(9.81, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN,[0.01,0.01,0.01,0.01])
 
     SetAddonStatus(Model.clientModel, AddOn.steel_design_active, True)
 
