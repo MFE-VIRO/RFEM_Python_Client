@@ -29,7 +29,6 @@ from RFEM.LoadCasesAndCombinations.staticAnalysisSettings import StaticAnalysisS
 from RFEM.Loads.nodalLoad import NodalLoad
 from RFEM.Loads.memberLoad import MemberLoad
 from RFEM.Results.resultTables import ResultTables, GetMaxValue, GetMinValue
-from RFEM.Tools.PlausibilityCheck import PlausibilityCheck
 
 try:
     import pandas
@@ -41,6 +40,7 @@ except:
         import subprocess
         try:
             subprocess.call('python -m pip install pandas --user')
+            os.execv(sys.executable, ['python'] + sys.argv)
         except:
             print('WARNING: Installation of pandas library failed!')
             print('Please use command "pip install pandas --user" in your Command Prompt.')
@@ -60,6 +60,7 @@ except:
         import subprocess
         try:
             subprocess.call('python -m pip install xlwings --user')
+            os.execv(sys.executable, ['python'] + sys.argv)
         except:
             print('WARNING: Installation of xlwings library failed!')
             print('Please use command "pip install xlwings --user" in your Command Prompt.')
@@ -425,7 +426,6 @@ def main():
 
     # Finish Model
     Model.clientModel.service.finish_modification()
-    PlausibilityCheck()
 
     # Calculation
     print("Calculation started...")
