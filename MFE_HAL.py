@@ -74,7 +74,7 @@ def BeamLimitCharacteristic(value: int = 100, sls_no = 1):
 
     os.remove(dirName+r"./sls_char.js")
 
-def SnowWizardMonopitch(nodeList: [1,2,3,4]):
+def SnowWizardMonopitch(nodeList= [1,2,3,4]):
 
     with open(dirName+r"./SnowWizard.js", "w") as snowwiz:
 
@@ -94,13 +94,13 @@ def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
 
 
 if __name__ == '__main__':
-    dy = 3 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
-    dx = 3 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 10 #int(input("Aantal assen in x-richting: "))
-    ny = 5 #int(input("Aantal assen in y-richting: "))
-    h = 6 #float(input("Hoogte hal incl. dakrand [m]: "))
-    h_dr = 0.5 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
-    dhr = 0.2 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
+    dy = 11 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
+    dx = 11 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
+    nx = 6 #int(input("Aantal assen in x-richting: "))
+    ny = 3 #int(input("Aantal assen in y-richting: "))
+    h = 14.4 #float(input("Hoogte hal incl. dakrand [m]: "))
+    h_dr = 1.5 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
+    dhr = 1.1 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
     kst_kol = 1 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     GewichtGevel = 0.3 # Gewicht gevel in kN/m²
     PB_Dak = 0.5 # Gewicht dakplaten en dakbedekking in kN/m²
 
-    qpz = 1.11 # "Winddruk in kN/m2 : "
+    qpz = 0.97 # "Winddruk in kN/m2 : "
 
     nodes=[]
 

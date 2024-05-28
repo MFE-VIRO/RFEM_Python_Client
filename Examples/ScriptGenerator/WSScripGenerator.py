@@ -11,7 +11,7 @@ from RFEM.initModel import Model
 from RFEM.Tools.GetObjectNumbersByType import GetAllObjects
 
 # Define name of the model from which the data should be exported
-model_name = 'test.rf6'
+model_name = 'Dak_G_20240413_0700_LIN.rf6'
 folderPath = ''
 
 # Connect to model
