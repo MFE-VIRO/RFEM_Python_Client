@@ -23,7 +23,7 @@ if __name__ == '__main__':
     Model(True, "ExampleMIFbySection.rf6")
     # Model.clientModel.service.delete_all()
     Model.clientModel.service.begin_modification()
-    BaseSettings(9.81, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN)
+    BaseSettings(10, GlobalAxesOrientationType.E_GLOBAL_AXES_ORIENTATION_ZUP, LocalAxesOrientationType.E_LOCAL_AXES_ORIENTATION_ZDOWN,[0.01,0.01,0.01,0.01])
 
     Material(1, 'S235JR | EN 10025-2:2019-08')
 
