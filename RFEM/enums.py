@@ -1104,13 +1104,6 @@ class AnchorageEndAnchorType(Enum):
     ANCHORAGE_TYPE_STRAIGHT, ANCHORAGE_TYPE_STRAIGHT_WITH_TRANSVERSE_BAR, ANCHORAGE_TYPE_STRAIGHT_WITH_TWO_TRANSVERSE_BARS = range(7)
 
 
-class SelectedObjectInformation(Enum):
-    '''
-    Information About Members | Enum
-    '''
-    LENGTH, VOLUME, MASS, AREA = range(4)
-
-
 class GlobalAxesOrientationType(Enum):
     '''
     Model Settings and Options Global Axes Orientation Type
@@ -1856,13 +1849,13 @@ class SurfaceResultsAdjustmentShape(Enum):
     '''
     Surface Result Adjustment Shape Type
     '''
-    SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_ELLIPSE = range(3)
+    SHAPE_RECTANGLE, SHAPE_CIRCLE, SHAPE_ELLIPSE, SHAPE_POLYGON = range(4)
 
 class SurfaceResultsAdjustmentType(Enum):
     '''
     Surface Result Adjustment Type. ZERO left out intentionaly.
     '''
-    AVERAGING_OF_MY_MXY_VY_NY_NXY, AVERAGING_OF_MX_MXY_VX_NX_NXY, USER_DEFINED, NONE = range(4)
+    AVERAGING_OF_MY_MXY_VY_NY_NXY, AVERAGING_OF_MX_MXY_VX_NX_NXY, USER_DEFINED, NONE, ZERO, CONTACT_STRESS_AREA = range(6)
 
 class SurfaceResultsAdjustmentProjection(Enum):
     '''
@@ -2086,7 +2079,9 @@ class MemberHingePartialActivityType(Enum):
     '''
     Member Hinge Partial Activity Type
     '''
-    PARTIAL_ACTIVITY_TYPE_COMPLETE, PARTIAL_ACTIVITY_TYPE_FIXED, PARTIAL_ACTIVITY_TYPE_INEFFECTIVNESS, PARTIAL_ACTIVITY_TYPE_TEARING, PARTIAL_ACTIVITY_TYPE_YIELDING = range(5)
+    PARTIAL_ACTIVITY_TYPE_COMPLETE, PARTIAL_ACTIVITY_TYPE_FIXED, PARTIAL_ACTIVITY_TYPE_FAILURE_FROM_FORCE, \
+    PARTIAL_ACTIVITY_TYPE_YIELDING_FROM_FORCE, PARTIAL_ACTIVITY_TYPE_INEFFECTIVNESS, PARTIAL_ACTIVITY_TYPE_FAILURE_FROM_MOMENT, \
+    PARTIAL_ACTIVITY_TYPE_YIELDING_FROM_MOMENT = range(7)
 
 class MemberNonlinearityType(Enum):
     '''
@@ -2662,3 +2657,13 @@ class MemberSpringSelfWeightDefinition(Enum):
     Member Spring Self Weight Definition Enumeration
     '''
     MASS, MASS_PER_LENGTH, SPECIFIC_WEIGHT = range(3)
+
+class SpectralAnalysisEnvelopeType(Enum):
+    '''
+    Response Spectrum Analysis Enevelope Type
+    '''
+    SPECTRAL_ANALYSIS_ABSOLUTE_SUM, SPECTRAL_ANALYSIS_DIRECTION_X, SPECTRAL_ANALYSIS_DIRECTION_X_WITH_MODE_SHAPE, \
+    SPECTRAL_ANALYSIS_DIRECTION_Y, SPECTRAL_ANALYSIS_DIRECTION_Y_WITH_MODE_SHAPE, \
+    SPECTRAL_ANALYSIS_DIRECTION_Z, SPECTRAL_ANALYSIS_DIRECTION_Z_WITH_MODE_SHAPE, \
+    SPECTRAL_ANALYSIS_SCALED_SUM_FULL_X, SPECTRAL_ANALYSIS_SCALED_SUM_FULL_Y, SPECTRAL_ANALYSIS_SCALED_SUM_FULL_Z, \
+    SPECTRAL_ANALYSIS_SCALED_SUMS_ENVELOPE, SPECTRAL_ANALYSIS_SRSS = range(12)
