@@ -94,14 +94,14 @@ def MemberToLineList(ListIn = [1,2,3,4], members=[{"no":1}]):
 
 
 if __name__ == '__main__':
-    dy = 11 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
-    dx = 11 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
-    nx = 6 #int(input("Aantal assen in x-richting: "))
-    ny = 3 #int(input("Aantal assen in y-richting: "))
+    dy = 5 #float(input("H.o.h. afstand tussen assen // x-as [m]: "))
+    dx = 5 #float(input("H.o.h. afstand tussen assen // y-as [m]: "))
+    nx = 8 #int(input("Aantal assen in x-richting: "))
+    ny = 5 #int(input("Aantal assen in y-richting: "))
     h = 14.4 #float(input("Hoogte hal incl. dakrand [m]: "))
-    h_dr = 1.5 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
-    dhr = 1.1 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
-    kst_kol = 1 #int(input("Aantal kniksteunen van de kolommen: "))
+    h_dr = 1.2 #float(input("Hoogte dakrand t.o.v. hart dakliggers [m]: "))
+    dhr = 0.8 #float(input("Hoogteverschil bovenkant dakrand en bovenkant dakafwerking [m]: "))
+    kst_kol = 2 #int(input("Aantal kniksteunen van de kolommen: "))
     nodes_frame = 2*(3+kst_kol)+ny-2
     members_frame = 2*(2+kst_kol)+ny-1
     sup_nodes = []
@@ -913,6 +913,7 @@ MemberLoad.InitialPrestress(1,990,insertSpaces(TensionMembers),MemberLoadDirecti
 
 
 Model.clientModel.service.finish_modification()
+Model.clientModel.service.generate_load_cases_and_combinations()
 Calculate_all()
 
 
