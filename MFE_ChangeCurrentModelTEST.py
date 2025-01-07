@@ -19,11 +19,11 @@ if __name__ == '__main__':
     Model(False, "") #Work in current RFEM6 model
     Model.clientModel.service.begin_modification()
 
-    CO = Model.clientModel.service.get_load_combination(1)
-    CO.no = 1
+    CO = Model.clientModel.service.get_load_combination(2)
+    CO.no = 66
     CO.design_situation = 1
-    CO.name = ''
-    # Model.clientModel.service.set_load_combination(CO)
+    CO.comment = '66'
+    Model.clientModel.service.set_load_combination(CO)
     items = CO.items.load_combination_items
     dictItems = {}
     for i in range(len(items)):
